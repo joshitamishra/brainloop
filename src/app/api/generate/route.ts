@@ -50,33 +50,51 @@ function cleanLLMJson(text: string): string {
 export async function POST(request: Request) {
     console.log("🔵 [API] /api/generate called");
 
-    const { topic } = await request.json();
+    const { topic, category } = await request.json();
+
     console.log("📥 Requested topic:", topic);
 
     if (!topic) {
         return NextResponse.json({ error: "Missing topic" }, { status: 400 });
     }
+    let prompt;
+    if (category === "primary" || category === "chemistry") {
+        /* prompt = `
+ You are an expert children's educator. Create EXACTLY 5 kid-friendly questions for the topic "${topic}".
+ Return ONLY valid JSON. No commentary. No backticks.
+ 
+ Each question should follow this structure:
+ {
+   "difficulty": "easy",
+   "type": "kid",
+   "question": "string"
+ }
+ 
+ Rules:
+ - Use simple vocabulary (ages 5–10).
+ - Use fun, friendly tone.
+ - No equations unless extremely simple (1+2 type).
+ - No abstract concepts.
+ - Use animals, shapes, colors, food, nature.
+ - Return ONLY the JSON array.
+ `; */
+        console.log("Skipping AI. Using static questions only.");
 
-    const prompt = `
-You are an expert tutor. Create a sequence of EXACTLY 5 questions for the topic "${topic}".
+        return;
+    } else {
+        prompt = `
+You are an expert tutor. Create EXACTLY 5 questions for the topic "${topic}".
+Return ONLY valid JSON. No backticks. No commentary.
 
-OUTPUT RULES (VERY IMPORTANT):
-- Output ONLY a single JSON array.
-- NO markdown, NO code fences.
-- NO comments.
-- NO LaTeX like \\( \\), \\[ \\], or '\\'.
-- All strings must be valid JSON strings.
+Each question must follow this format:
+{
+  "difficulty": "easy|medium|conceptual|applied|advanced",
+  "type": "recall|apply|explain|solve|generalize",
+  "question": "string"
+}
 
-Format exactly:
-
-[
-  { "difficulty": "easy",       "type": "recall",      "question": "..." },
-  { "difficulty": "medium",     "type": "apply",       "question": "..." },
-  { "difficulty": "conceptual", "type": "explain",     "question": "..." },
-  { "difficulty": "applied",    "type": "solve",       "question": "..." },
-  { "difficulty": "advanced",   "type": "generalize",  "question": "..." }
-]
-`;
+Return only JSON array.
+`}
 
     try {
         console.log("📡 Sending request to Ollama…");

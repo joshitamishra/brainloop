@@ -2,7 +2,8 @@ import "./globals.css";
 import ClientSessionProvider from "@/components/ClientSessionProvider";
 import Sidebar from "@/components/Sidebar";
 
-export default function RootLayout({ children }) {
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className="min-h-screen bg-[#0f0f11] text-[#e5e5e5] flex">

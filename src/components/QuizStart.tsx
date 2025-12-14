@@ -1,9 +1,11 @@
 "use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 
 export default function QuizStart({ topic }: { topic: string }) {
     const router = useRouter();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
 
     return (

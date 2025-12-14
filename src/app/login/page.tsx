@@ -3,19 +3,22 @@
 import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
-    return (
-        <div className="flex flex-col items-center justify-center h-screen text-center">
-            <h1 className="text-3xl font-semibold mb-6">Sign In</h1>
+    const handleSignIn = () => {
+        signIn("google", { 
+            callbackUrl: "/",
+            redirect: true 
+        });
+    };
 
-            <p className="text-gray-400 mb-10">
-                Continue with your Google account to begin.
-            </p>
+    return (
+        <div className="flex flex-col items-center mt-32">
+            <h1 className="text-3xl font-bold mb-6">Login to Continue</h1>
 
             <button
-                onClick={() => signIn("google")}
-                className="w-64 py-3 bg-[#3b82f6] rounded-lg hover:bg-[#2563eb] transition text-white"
+                onClick={handleSignIn}
+                className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
             >
-                Continue with Google
+                Sign in with Google
             </button>
         </div>
     );

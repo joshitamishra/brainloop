@@ -1,48 +1,111 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import confetti from "canvas-confetti";
+import { isAnswerCorrect } from "@/lib/normalise";
+import { engToHindi } from "@/lib/hindiTranslit";
 
 type Question = {
-    text: string;
-    answer: string;
+    text?: string;
+    q?: string;
+    answer?: string;
+    a?: string;
+    passage?: string;
 };
 
-const algebraQuestions: Question[] = [
-    { text: "What is 2 + 3?", answer: "5" },
-    { text: "Solve for x: x + 4 = 9", answer: "5" },
-    { text: "What is 3 × 4?", answer: "12" },
-    { text: "Simplify: 10 - 6", answer: "4" },
-    { text: "Solve: 2x = 8", answer: "4" },
-    { text: "What is 15 ÷ 3?", answer: "5" },
-    { text: "Simplify: 7 + 2", answer: "9" },
-    { text: "What is 6 × 2?", answer: "12" },
-    { text: "Solve: x - 3 = 2", answer: "5" },
-    { text: "Simplify: 9 - 1", answer: "8" },
-];
+/* -------------------------------------------
+   🎈 BALLOONS FOR CORRECT ANSWERS
+------------------------------------------- */
+function showBalloons() {
+    confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.7 },
+        shapes: ["circle"],
+        colors: ["#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#5f27cd"]
+    });
+    const audio = new Audio("/sounds/yay.mp3");
+    audio.volume = 0.5; // adjust 0.0–1.0
+    audio.play().catch(() => {
+        // Browser blocked autoplay (happens if user hasn’t interacted yet)
+        console.warn("Sound could not play automatically.");
+    });
+}
 
 export default function QuizUI({
     topic,
+    category,
     onExit,
 }: {
     topic: string;
+    category?: string | null;
     onExit: () => void;
 }) {
-    const [timeLeft, setTimeLeft] = useState(600); // 10 min countdown (600 sec)
+    /* -------------------------------------------
+       ⏱ STATE
+    ------------------------------------------- */
+    const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
     const [currentIndex, setCurrentIndex] = useState(0);
     const [input, setInput] = useState("");
     const [submittedQuestions, setSubmittedQuestions] = useState<
         { q: Question; userAnswer: string; correct: boolean }[]
     >([]);
     const [fade, setFade] = useState(true);
+    const [questions, setQuestions] = useState<Question[]>([]);
+    const [loaded, setLoaded] = useState(false);
 
-    const isFinished =
-        currentIndex >= algebraQuestions.length || timeLeft <= 0;
-    const currentQuestion = !isFinished ? algebraQuestions[currentIndex] : null;
+    /* -------------------------------------------
+       🔊 WRONG SOUND SETUP (WORKING VERSION)
+    ------------------------------------------- */
+    const wrongSoundRef = useRef<HTMLAudioElement | null>(null);
+    const wrongSoundSrc = "/sounds/pew_pew.mp3";
 
-    // ---------------------
-    // TIMER
-    // ---------------------
     useEffect(() => {
+        wrongSoundRef.current = new Audio(wrongSoundSrc);
+        wrongSoundRef.current.volume = 0.7;
+    }, []);
+
+    function playWrongSound() {
+        const audio = wrongSoundRef.current;
+        if (!audio) return;
+
+        audio.currentTime = 0;
+
+        audio.play().catch((err) => {
+            console.warn("⚠️ Audio blocked, retrying...", err);
+            const retry = new Audio(wrongSoundSrc);
+            retry.volume = 0.7;
+            retry.play().catch((err2) => {
+                console.error("❌ Could not play audio:", err2);
+            });
+        });
+    }
+
+    /* -------------------------------------------
+       📥 LOAD QUESTIONS
+    ------------------------------------------- */
+    useEffect(() => {
+        const saved = sessionStorage.getItem("currentSessionQuestions");
+
+        if (saved && saved !== "undefined" && saved !== "null") {
+            try {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed)) {
+                    setQuestions(parsed);
+                }
+            } catch (err) {
+                console.error("❌ Failed to parse questions:", err);
+            }
+        }
+
+        setLoaded(true);
+    }, []);
+
+    /* -------------------------------------------
+       ⏱ TIMER
+    ------------------------------------------- */
+    useEffect(() => {
+        if (!loaded) return;
         if (timeLeft <= 0) return;
 
         const t = setInterval(() => {
@@ -50,139 +113,222 @@ export default function QuizUI({
         }, 1000);
 
         return () => clearInterval(t);
-    }, [timeLeft]);
+    }, [timeLeft, loaded]);
 
-    // ---------------------
-    // SAVE HISTORY WHEN FINISHED
-    // ---------------------
+    /* -------------------------------------------
+       🧠 QUIZ LOGIC
+    ------------------------------------------- */
+    const isFinished = loaded && (currentIndex >= questions.length || timeLeft <= 0);
+    const isTimeUp = loaded && timeLeft <= 0;
+
+    const totalQuestions = questions.length;
+    const correctCount = submittedQuestions.filter((q) => q.correct).length;
+
+    const timeTaken = 300 - timeLeft;
+    const minutesTaken = Math.floor(timeTaken / 60);
+    const secondsTaken = (timeTaken % 60).toString().padStart(2, "0");
+
+    /* -------------------------------------------
+   📝 SAVE DAILY HISTORY IN INDEXEDDB
+------------------------------------------- */
+    /* -------------------------------------------
+   📝 SAVE DAILY HISTORY IN INDEXEDDB (FIXED)
+------------------------------------------- */
     useEffect(() => {
         if (!isFinished) return;
 
-        const history = JSON.parse(localStorage.getItem("brainloop-history") || "[]");
+        console.log("🚀 Quiz finished — saving DAILY history…");
 
-        history.push({
+        const todayKey = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+
+        let all: any = {};
+
+        try {
+            const stored = localStorage.getItem("brainloop-daily-history");
+            if (stored && stored !== "undefined" && stored !== "null") {
+                all = JSON.parse(stored);
+                if (typeof all !== "object" || all === null) {
+                    all = {};
+                }
+            }
+        } catch (err) {
+            console.error("❌ Failed to parse daily history:", err);
+            all = {};
+        }
+
+        // Ensure today’s bucket exists and is an array
+        if (!Array.isArray(all[todayKey])) {
+            all[todayKey] = [];
+        }
+
+        const record = {
             timestamp: Date.now(),
             topic,
-            answers: submittedQuestions,
-            duration: 600 - timeLeft,
-        });
+            score: submittedQuestions.filter((q) => q.correct).length,
+            total: submittedQuestions.length,
+            duration: Math.max(0, 300 - timeLeft),
+            finishedBy: isTimeUp ? "timeup" : "completed",
+        };
 
-        localStorage.setItem("brainloop-history", JSON.stringify(history));
+        console.log("📝 New daily record:", record);
+
+        all[todayKey].push(record);
+
+        localStorage.setItem("brainloop-daily-history", JSON.stringify(all));
+
+        console.log(
+            "📌 SAVED DAILY HISTORY:",
+            JSON.parse(localStorage.getItem("brainloop-daily-history") || "{}")
+        );
     }, [isFinished]);
 
-    // ---------------------
-    // HANDLE SUBMIT
-    // ---------------------
+
+
+    function checkAnswer(userAnswer: string, correctAnswer: string) {
+        return isAnswerCorrect(userAnswer, correctAnswer);
+}
+
+    /* -------------------------------------------
+       🎯 SUBMIT HANDLER
+    ------------------------------------------- */
     function handleSubmit() {
-        const q = algebraQuestions[currentIndex];
-        const correct = input.trim() === q.answer.trim();
+        if (!questions[currentIndex]) return;
 
-        setSubmittedQuestions([
-            ...submittedQuestions,
-            { q, userAnswer: input, correct },
-        ]);
+        const q = questions[currentIndex];
+        const expected = (q.answer ?? q.a ?? "").trim().toLowerCase();
 
-        // fade animation
+        const correct =
+            checkAnswer(input.trim().toLowerCase(), expected);
+
+        if (correct) {
+            showBalloons();
+        } else {
+            playWrongSound();
+        }
+
+        setSubmittedQuestions((prev) => [...prev, { q, userAnswer: input, correct }]);
+
         setFade(false);
         setTimeout(() => {
-            setCurrentIndex(currentIndex + 1);
+            setCurrentIndex((i) => i + 1);
             setInput("");
             setFade(true);
         }, 150);
     }
 
-    // ---------------------
-    // FORMAT TIMER
-    // ---------------------
+    /* -------------------------------------------
+       🎨 RENDER UI
+    ------------------------------------------- */
+
+    if (!loaded) return <div className="text-center p-10 text-xl">Loading questions…</div>;
+
+    const currentQuestion = questions[currentIndex];
     const minutes = Math.floor(timeLeft / 60).toString().padStart(2, "0");
     const seconds = (timeLeft % 60).toString().padStart(2, "0");
 
-    const timerColor =
-        timeLeft < 60
-            ? "text-red-600 dark:text-red-400"
-            : "text-indigo-700 dark:text-indigo-300";
-
     return (
         <div className="w-full max-w-2xl flex flex-col gap-8 animate-fadeIn">
+            {/* Header */}
             <div className="flex justify-between items-center">
-                <h2 className="text-3xl font-bold text-indigo-700 dark:text-indigo-300 capitalize">
-                    {topic} Quiz
-                </h2>
+                <h2 className="text-3xl font-bold capitalize">{topic} Quiz</h2>
+                <button onClick={onExit} className="underline">Change Topic</button>
+            </div>
 
-                <button
-                    onClick={onExit}
-                    className="text-indigo-600 dark:text-indigo-300 underline hover:opacity-80"
+            {/* Timer */}
+            <div className="text-2xl font-bold">⏳ {minutes}:{seconds}</div>
+
+            {/* Previous Answers */}
+            {/* Previous Answers */}
+            {submittedQuestions.map((entry, i) => (
+                <div
+                    key={i}
+                    className={`p-5 rounded-xl shadow-md border-2 mb-4 ${entry.correct
+                        ? "bg-green-100 border-green-400"
+                        : "bg-red-100 border-red-400"
+                        }`}
                 >
-                    Change Topic
-                </button>
-            </div>
+                    {/* Question */}
+                    <p className="text-lg font-bold text-gray-900">
+                        Q{i + 1}: {entry.q.text ?? entry.q.q}
+                    </p>
 
-            {/* Countdown */}
-            <div className={`text-2xl font-bold ${timerColor}`}>
-                ⏳ {minutes}:{seconds}
-            </div>
+                    {/* User Answer */}
+                    <p className="mt-1 text-gray-800 text-base">
+                        Your answer:{" "}
+                        <span
+                            className={`font-bold ${entry.correct ? "text-green-700" : "text-red-700"
+                                }`}
+                        >
+                            {entry.userAnswer}
+                        </span>
+                    </p>
 
-            {/* Previous Questions */}
-            <div className="flex flex-col gap-6">
-                {submittedQuestions.map((entry, i) => (
-                    <div
-                        key={i}
-                        className={`p-5 rounded-xl shadow-lg border transition-all duration-300 ${entry.correct
-                                ? "bg-green-50 border-green-200 dark:bg-green-900 dark:border-green-700"
-                                : "bg-red-50 border-red-200 dark:bg-red-900 dark:border-red-700"
-                            }`}
-                    >
-                        <p className="text-lg font-medium dark:text-gray-200">
-                            Q{i + 1}: {entry.q.text}
-                        </p>
-                        <p className="mt-2 text-gray-700 dark:text-gray-300">
-                            Your answer:{" "}
-                            <span
-                                className={`font-semibold ${entry.correct ? "text-green-700 dark:text-green-300" : "text-red-700 dark:text-red-300"
-                                    }`}
-                            >
-                                {entry.userAnswer}
+                    {/* Correct Answer */}
+                    {!entry.correct && (
+                        <p className="mt-1 text-base text-gray-900">
+                            Correct answer:{" "}
+                            <span className="font-bold text-green-700">
+                                {entry.q.answer ?? entry.q.a}
                             </span>
                         </p>
-                        {!entry.correct && (
-                            <p className="text-gray-700 dark:text-gray-300">
-                                Correct answer: <strong>{entry.q.answer}</strong>
-                            </p>
-                        )}
-                    </div>
-                ))}
-            </div>
+                    )}
+                </div>
+            ))}
+
 
             {/* Current Question */}
             {!isFinished && (
-                <div
-                    className={`bg-white dark:bg-gray-900 p-6 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 transition-opacity duration-300 ${fade ? "opacity-100" : "opacity-0"
-                        }`}
-                >
-                    <p className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                        {currentQuestion?.text}
+                <div className={`p-6 rounded-xl transition-opacity ${fade ? "opacity-100" : "opacity-0"}`}>
+                    {currentQuestion?.passage && (
+                        <div className="mb-4 p-4 bg-teal-50 rounded-xl whitespace-pre-line">
+                            {currentQuestion.passage}
+                        </div>
+                    )}
+
+                    <p className="text-2xl font-semibold mb-4">
+                        {currentQuestion?.q ?? currentQuestion?.text}
                     </p>
 
                     <input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        className="border p-3 rounded-lg w-full text-lg mb-4 shadow-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100"
+                        onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                        className="border p-3 rounded-lg w-full"
                         placeholder="Type your answer..."
+                        autoFocus
+                        lang={category === "hindi" || topic === "hindi" ? "hi" : "en"}
+                        inputMode={category === "hindi" || topic === "hindi" ? "text" : "latin"}
                     />
 
-                    <button
-                        onClick={handleSubmit}
-                        className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition duration-150 shadow-md"
-                    >
+                    <button onClick={handleSubmit} className="px-6 py-3 bg-indigo-600 text-white rounded-xl mt-4">
                         Submit
                     </button>
                 </div>
             )}
 
-            {/* Finished */}
+            {/* Quiz Finished */}
             {isFinished && (
-                <div className="text-center text-2xl font-semibold text-indigo-700 dark:text-indigo-300 py-8 animate-fadeIn">
-                    🎉 Quiz Complete!
+                <div className="text-center py-8">
+                    {isTimeUp ? (
+                        <h2 className="text-3xl font-bold text-red-500">⏳ Time’s Up!</h2>
+                    ) : (
+                        <h2 className="text-3xl font-bold text-indigo-600">🎉 Quiz Complete!</h2>
+                    )}
+
+                    <p className="text-xl">
+                        Score: <b>{correctCount}/{totalQuestions}</b>
+                    </p>
+
+                    {!isTimeUp && (
+                        <p className="text-lg mt-2">Time Taken: {minutesTaken}:{secondsTaken}</p>
+                    )}
+
+                    <button
+                        onClick={onExit}
+                        className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-xl"
+                    >
+                        Go Back
+                    </button>
                 </div>
             )}
         </div>

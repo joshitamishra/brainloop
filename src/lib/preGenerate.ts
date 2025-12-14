@@ -2,21 +2,27 @@ import { QUESTION_BANK } from "@/data/questions";
 import { loadAIQuestions, saveAIQuestions } from "@/lib/db";
 
 export async function preGenerateAllTopics(currentTopic: string) {
-    const allTopics = Object.values(QUESTION_BANK)
-        .flatMap((cat) => Object.keys(cat.topics))
-        .filter((topic) => topic !== currentTopic);
+    const tasks: { category: string; topic: string }[] = [];
 
-    for (const topic of allTopics) {
+    for (const [catKey, catVal] of Object.entries(QUESTION_BANK)) {
+        for (const topicKey of Object.keys(catVal.topics)) {
+            if (topicKey !== currentTopic) {
+                tasks.push({ category: catKey, topic: topicKey });
+            }
+        }
+    }
+
+    for (const { category, topic } of tasks) {
         const cached = await loadAIQuestions(topic);
         if (cached) continue;
 
-        console.log("🔧 Pre-generating:", topic);
+        console.log("🔧 Pre-generating:", topic, "Category:", category);
 
         try {
             const res = await fetch("/api/generate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ topic }),
+                body: JSON.stringify({ topic, category }),
             });
 
             const data = await res.json();
