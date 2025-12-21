@@ -31,8 +31,5 @@ export function isAnswerCorrect(user: string, correct: string): boolean {
   const u = normalize(user);
   const c = normalize(correct);
 
-  if (u === c) return true;
-  if (c.includes(u) || u.includes(c)) return true;
-
-  return false;
+  return u === c;
 }

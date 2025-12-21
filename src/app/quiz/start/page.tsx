@@ -5,54 +5,52 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 import { loadAIQuestions, saveAIQuestions } from "@/lib/db";
-import { QUESTION_BANK } from "@/data/questions";
-import { preGenerateAllTopics } from "@/lib/preGenerate";
+import { loadPrimaryQuestions } from "@/lib/loadPrimaryQuestions";
 
 export default function QuizStartPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { status } = useSession();
 
-    const topicKey = searchParams.get("topic");
+    // URL params
     const category = searchParams.get("category");
+    const topicKey = searchParams.get("topic");
+    const age = searchParams.get("age"); // required for primary
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const [todayHistory, setTodayHistory] = useState<any[]>([]);
 
-    const initCalled = useRef(false); // 🚀 NEW: prevents double API calls
+    // Prevent double execution (React strict mode)
+    const initCalled = useRef(false);
 
-    let topicLabel = "Unknown Topic";
+    /* ✅ ADD THIS RESET EFFECT */
+    useEffect(() => {
+        // 🔄 reset ALL quiz state when URL changes
+        setError("");
+        setLoading(true);
+        initCalled.current = false;
 
-    function isValidCategory(key: string): key is keyof typeof QUESTION_BANK {
-        return key in QUESTION_BANK;
-    }
-    if (
-        category &&
-        topicKey &&
-        isValidCategory(category) &&
-        isValidTopic(category, topicKey)
-    ) {
-        topicLabel = (QUESTION_BANK as any)[category].topics[topicKey].label;
-    }
+        // also clear stale session data
+        sessionStorage.removeItem("currentSessionQuestions");
+        sessionStorage.removeItem("quiz_session_active");
+    }, [category, topicKey, age]);
 
-    function isValidTopic(
-        category: keyof typeof QUESTION_BANK,
-        key: string
-    ): key is keyof typeof QUESTION_BANK[typeof category]["topics"] {
-        return key in QUESTION_BANK[category].topics;
-    }
-
+    // -----------------------------
+    // Auth guard
+    // -----------------------------
     useEffect(() => {
         if (status === "unauthenticated") {
             router.push("/login");
         }
     }, [status, router]);
 
+    // -----------------------------
+    // Main init
+    // -----------------------------
     useEffect(() => {
         if (status !== "authenticated") return;
 
-        if (!topicKey) {
+        if (!category || !topicKey) {
             router.push("/topic");
             return;
         }
@@ -63,53 +61,39 @@ export default function QuizStartPage() {
         async function init() {
             setLoading(true);
 
-            console.log("➡️ topicKey:", topicKey);
-            console.log("➡️ category:", category);
+            /* =====================================================
+               PRIMARY BLOCK (STATIC, AGE-BASED)
+            ===================================================== */
+            if (category === "primary") {
+                if (!age) {
+                    setError("Missing age group.");
+                    setLoading(false);
+                    return;
+                }
 
-            console.log("Is valid category?", isValidCategory(category!));
-            console.log(
-                "Is valid topic?",
-                category && isValidCategory(category) && isValidTopic(category, topicKey!)
-            );
+                try {
+                    const questions = await loadPrimaryQuestions(age, topicKey);
 
-            if (category === "primary" || category === "chemistry") {
-                console.log("🎒 STATIC MODE — SHOULD USE STATIC QUESTIONS");
-            }
-
-            // --------------------------------------------------
-            // 🚫 HARD STOP → PRIMARY CATEGORY NEVER USES LLM
-            // --------------------------------------------------
-            if (category === "primary" || category === "chemistry" || category === "computer" || category === "gk") {
-                console.log("🎒 Static category → Using static questions only");
-
-                if (
-                    isValidCategory(category) &&
-                    topicKey &&
-                    isValidTopic(category, topicKey)
-                ) {
-                    const staticQs = (QUESTION_BANK as any)[category].topics[topicKey].questions;
-
-                    if (!staticQs || staticQs.length === 0) {
-                        console.error("❌ No static questions found for:", topicKey);
-                        setError("Static questions not found.");
+                    if (!questions || questions.length === 0) {
+                        setError("No questions found for this topic.");
                         setLoading(false);
                         return;
                     }
-
-                    beginSession(staticQs);
-                    return; // ← IMPORTANT
+                    beginSession(questions);
+                    return;
+                } catch (err) {
+                    console.error("Primary load error:", err);
+                    setError("Failed to load primary content.");
+                    setLoading(false);
+                    return;
                 }
-
-                console.error("❌ Invalid static topic:", topicKey);
-                setError("Invalid static topic.");
-                setLoading(false);
-                return;
             }
-            // --------------------------------------------------
 
-            // NORMAL FLOW FOR NON-PRIMARY CATEGORIES
-            const cached = await loadAIQuestions(topicKey!);
-            if (cached) {
+            /* =====================================================
+               NON-PRIMARY (AI / STATIC)
+            ===================================================== */
+            const cached = await loadAIQuestions(topicKey);
+            if (cached && cached.length > 0) {
                 beginSession(cached);
                 return;
             }
@@ -118,20 +102,19 @@ export default function QuizStartPage() {
                 const res = await fetch("/api/generate", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ topic: topicKey, category }),
+                    body: JSON.stringify({ category, topic: topicKey }),
                 });
 
                 const data = await res.json();
 
-                if (!data.questions) {
+                if (!data.questions || !Array.isArray(data.questions)) {
                     setError("Failed to generate questions.");
                     setLoading(false);
                     return;
                 }
 
-                await saveAIQuestions(topicKey!, data.questions);
+                await saveAIQuestions(topicKey, data.questions);
                 beginSession(data.questions);
-
             } catch (err) {
                 console.error("Generate error:", err);
                 setError("Failed to contact AI engine.");
@@ -140,18 +123,14 @@ export default function QuizStartPage() {
         }
 
         init();
-    }, [status, topicKey, category, router]);
+    }, [status, category, topicKey, age, router]);
 
-    if (status === "loading") {
-        return <div>Checking login…</div>;
-    }
-    if (status === "unauthenticated") return null;
-
-    function beginSession(questions: any) {
-        if (!questions || !Array.isArray(questions) || questions.length === 0) {
-            console.error("❌ Cannot begin quiz: empty or invalid question list", questions);
-            return;
-        }
+    // -----------------------------
+    // Start session
+    // -----------------------------
+    function beginSession(questions: any[]) {
+        //clear bad session
+        sessionStorage.removeItem("currentSessionQuestions");
 
         sessionStorage.setItem(
             "currentSessionQuestions",
@@ -160,7 +139,16 @@ export default function QuizStartPage() {
 
         sessionStorage.setItem("quiz_session_active", "true");
 
-        router.push(`/quiz/session?topic=${topicKey}&category=${category}`);
+        router.push(
+            `/quiz/session?category=${category}&topic=${topicKey}${age ? `&age=${age}` : ""}`
+        );
+    }
+
+    // -----------------------------
+    // UI states
+    // -----------------------------
+    if (status === "loading") {
+        return <div className="p-10">Checking login…</div>;
     }
 
     if (error) {
@@ -175,14 +163,10 @@ export default function QuizStartPage() {
         return (
             <div className="p-10 text-center space-y-6">
                 <h2 className="text-2xl font-semibold">
-                    Generating questions for <span className="text-blue-400">{topicLabel}</span>…
+                    Preparing your session…
                 </h2>
-
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-400 mx-auto"></div>
-
-                <p className="text-gray-400">
-                    This may take a few seconds on your local AI model.
-                </p>
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-400 mx-auto" />
+                <p className="text-gray-400">Please wait a moment.</p>
             </div>
         );
     }

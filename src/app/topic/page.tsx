@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { QUESTION_BANK } from "@/data/questions-client";
 
 /* ---------------------------
    🔵 TOPIC DEFINITIONS
@@ -30,11 +31,11 @@ const PHYSICS_TOPICS = [
 ];
 
 const PRIMARY_TOPICS = [
-    { key: "basic_math", label: "Basic Math" },
+    { key: "basic_math", label: "Math" },
     { key: "english", label: "English" },
-    { key: "hindi", label: "Hindi" },
     { key: "science", label: "Science" },
-    { key: "reading", label: "Reading Comprehension" }
+    { key: "reading", label: "Reading Comprehension" },
+    { key: "shlok", label: "Shlok" }
 ];
 
 /* ---------------------------
@@ -160,18 +161,37 @@ export default function TopicPage() {
 
             {/* PRIMARY BLOCK */}
             <div>
-                <h2 className="text-lg font-semibold text-slate-400 uppercase">Primary Block</h2>
-                <div className="grid gap-3 mt-2">
-                    {PRIMARY_TOPICS.map(t => (
-                        <button
-                            key={t.key}
-                            onClick={() => goToTopic(t.key, "primary")
-                            }
-                            className="p-4 bg-white dark:bg-slate-800 border rounded-xl shadow hover:shadow-lg transition-all hover:scale-[1.02] text-left text-slate-900 dark:text-white">
-                            {t.label}
-                        </button>
-                    ))}
-                </div>
+                <h2 className="text-lg font-semibold text-slate-400 uppercase">
+                    {QUESTION_BANK.primary.label}
+                </h2>
+
+                {Object.entries(QUESTION_BANK.primary.ageGroups).map(([ageKey, ageGroup]) => (
+                    <div key={ageKey} className="mt-4">
+                        <h3 className="text-sm text-slate-500 mb-2">
+                            {ageGroup.label}
+                        </h3>
+
+                        <div className="grid gap-3">
+                            {Object.entries(ageGroup.topics).map(([topicKey, topic]) => (
+                                <button
+                                    key={topicKey}
+                                    onClick={() => {
+                                        if ("kind" in topic && topic.kind === "content" && "route" in topic) {
+                                            router.push(topic.route);
+                                        } else {
+                                            router.push(
+                                                `/quiz/start?category=primary&age=${ageKey}&topic=${topicKey}`
+                                            );
+                                        }
+                                    }}
+                                    className="p-4 bg-white dark:bg-slate-800 border rounded-xl shadow hover:shadow-lg transition-all hover:scale-[1.02] text-left text-slate-900 dark:text-white"
+                                >
+                                    {topic.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>  
     );

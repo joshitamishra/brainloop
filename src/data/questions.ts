@@ -48,30 +48,6 @@ export const QUESTION_BANK = {
         },
     },
 
-    veda:{
-        label: "Veda",
-        topics: {
-            ramayana: {
-                label: "    ",
-                questions: [
-                    "What is the meaning of the word 'ramayana'?",
-                ],
-            },
-            mahabharata: {
-                label: "Mahabharata",
-                questions: [
-                    "What is the meaning of the word 'mahabharata'?",
-                ],
-            },
-            vedas: {
-                label: "Vedas",
-                questions: [
-                    "What is the meaning of the word 'vedas'?",
-                ],
-            },
-        },
-    },
-
     // GK BLOCK
     gk: {
         label: "GK",
@@ -237,111 +213,70 @@ export const QUESTION_BANK = {
             }
         },
     },
-
-    primary: {
-        label: "PRIMARY BLOCK",
-        topics: {
-            basic_math: {
-                label: "Basic Math",
-                questions: [
-                    { q: "What is 10 ÷ 2?", a: "5" },
-                    { q: "What is 12 ÷ 3?", a: "4" },
-                    { q: "What is 15 ÷ 5?", a: "3" },
-                    { q: "What is 16 ÷ 4?", a: "4" },
-                    { q: "What is 18 ÷ 3?", a: "6" },
-
-                    { q: "What is 20 ÷ 4?", a: "5" },
-                    { q: "What is 14 ÷ 2?", a: "7" },
-                    { q: "What is 9 ÷ 3?", a: "3" },
-                    { q: "What is 21 ÷ 7?", a: "3" },
-                    { q: "What is 24 ÷ 6?", a: "4" }
-                ]
-            },
-
-            english: {
-                label: "English",
-                questions: [
-                    { q: "Choose the conjunction: I wanted to play, ___ it started to rain.", a: "but" },
-                    { q: "Fill in the blank with a conjunction: You can have tea ___ juice.", a: "or" },
-                    { q: "Choose the conjunction: She was tired ___ she finished her homework.", a: "but" },
-                    { q: "Fill in the blank: I will go to the park ___ my friend comes.", a: "if" },
-                    { q: "Choose the conjunction: He is small ___ strong.", a: "but" },
-
-                    { q: "Pick the noun: The dog chased the ball.", a: "dog" },
-                    { q: "Choose the noun: The teacher wrote on the board.", a: "teacher" },
-                    { q: "Fill in the blank with a noun: The ___ is barking loudly.", a: "dog" },
-                    { q: "Pick the noun: The sun is shining brightly.", a: "sun" },
-                    { q: "Choose the noun: The children played in the garden.", a: "children" }
-                ]
-            },
-
-            hindi: {
-                label: "Hindi",
-                questions: [
-                    { q: "‘आम’ किस प्रकार का फल है?", a: "मीठा फल" },
-                    { q: "सूरज कहाँ उगता है?", a: "पूर्व दिशा में" },
-                    { q: "‘कुत्ता’ किसका नाम है?", a: "जानवर" },
-                    { q: "‘घर’ का विलोम क्या है?", a: "बाहर" },
-                    { q: "‘बड़ा’ का समानार्थी शब्द?", a: "विशाल" },
-                    { q: "भारत की राजधानी क्या है?", a: "नई दिल्ली" },
-                    { q: "‘लाल’ किस रंग का नाम है?", a: "लाल रंग" },
-                    { q: "‘गाय’ क्या देती है?", a: "दूध" },
-                    { q: "‘जल’ का अर्थ क्या है?", a: "पानी" },
-                    { q: "‘खुश’ का विलोम क्या है?", a: "दुखी" }
-                ]
-            },
-
-            science: {
-                label: "Science",
-                questions: [
-                    { q: "What do we call animals that eat only plants?", a: "Herbivores" },
-                    { q: "What do we call animals that eat only meat?", a: "Carnivores" },
-                    { q: "What do we call animals that eat both plants and meat?", a: "Omnivores" },
-                    { q: "Which body part do birds use to fly?", a: "Wings" },
-                    { q: "Where do fish live?", a: "In water" },
-                    { q: "What helps a fish breathe in water?", a: "Gills" },
-                    { q: "Which animal is known as the king of the jungle?", a: "Lion" },
-                    { q: "What is a baby dog called?", a: "Puppy" },
-                    { q: "What is a baby cat called?", a: "Kitten" },
-                    { q: "What is a baby cow called?", a: "Calf" },
-                    { q: "Name one animal that can fly.", a: "Bird" },
-                    { q: "Name one animal that lives in the Arctic with thick fur.", a: "Polar bear" },
-                    { q: "Which animal has a long trunk?", a: "Elephant" },
-                    { q: "Which animal carries its baby in a pouch?", a: "Kangaroo" },
-                    { q: "What do we call animals that live on farms?", a: "Farm animals" }
-                ]
-            },
-
-            reading: {
-                label: "Reading Comprehension",
-                questions: [
-                    {
-                        passage: "Riya discovered a shimmering blue seashell along the shore.\nShe examined its smooth surface carefully.\nGentle waves rolled in and brushed against her sandals.\nRiya tucked the seashell safely into her pocket, feeling delighted.",
-                        q: "What did Riya discover?",
-                        a: "A blue seashell"
-                    },
-                    {
-                        passage: "A tiny sparrow perched on the branch outside Noah’s window.\nEach morning, it sang a soft, cheerful melody.\nNoah listened patiently, enjoying the peaceful tune.\nHe looked forward to hearing the sparrow every day.",
-                        q: "What bird sat outside Noah’s window?",
-                        a: "A sparrow"
-                    },
-                    {
-                        passage: "Sara prepared a batch of chocolate cookies with her mother.\nThey carefully measured the ingredients and stirred the mixture.\nSoon, a warm and comforting aroma filled the kitchen.\nSara eagerly waited for the freshly baked cookies to cool.",
-                        q: "What was Sara making?",
-                        a: "Chocolate cookies"
-                    },
-                    {
-                        passage: "Leo created a detailed drawing of a rainbow using his crayons.\nHe blended the colors to make each stripe appear bright and vivid.\nHis teacher admired the artwork and praised his effort.\nLeo felt a strong sense of pride in his colorful masterpiece.",
-                        q: "What did Leo draw?",
-                        a: "A rainbow"
-                    },
-                    {
-                        passage: "A playful puppy dashed around the yard chasing its own tail.\nIt spun in quick circles, becoming dizzy and excited.\nEmma couldn’t stop laughing as she watched its silly antics.\nEventually, the puppy lay down, panting but satisfied.",
-                        q: "What was the puppy chasing?",
-                        a: "Its tail"
+        primary: {
+            label: "PRIMARY BLOCK",
+            ageGroups: {
+                "4-6": {
+                    label: "4–6 Years",
+                    topics: {
+                        basic_math: {
+                            label: "Math",
+                            route: "/primary/4-6/basic-math",
+                            type: "quiz"
+                        },
+                        english: {
+                            label: "English",
+                            route: "/primary/4-6/english",
+                            type: "quiz"
+                        },
+                        science: {
+                            label: "Science",
+                            route: "/primary/4-6/science",
+                            type: "quiz"
+                        },
+                        reading: {
+                            label: "Reading Comprehension",
+                            route: "/primary/4-6/reading",
+                            type: "quiz"
+                        },
+                        shlok: {
+                            label: "Shlok",
+                            route: "/primary/4-6/shlok",
+                            type: "content"
+                        }
                     }
-                ]
-            }
+                },
+
+                "6-8": {
+                    label: "6–8 Years",
+                    topics: {
+                        basic_math: {
+                            label: "Basic Math",
+                            route: "/primary/6-8/basic-math",
+                            type: "quiz"
+                        },
+                        english: {
+                            label: "English",
+                            route: "/primary/6-8/english",
+                            type: "quiz"
+                        },
+                        science: {
+                            label: "Science",
+                            route: "/primary/6-8/science",
+                            type: "quiz"
+                        },
+                        reading: {
+                            label: "Reading Comprehension",
+                            route: "/primary/6-8/reading",
+                            type: "quiz"
+                        },
+                        shlok: {
+                            label: "Shlok",
+                            route: "/primary/6-8/shlok",
+                            type: "content"
+                        }
+                    }
+                }
         }
-    }
+    },
 } as const;

@@ -39,12 +39,36 @@ export const QUESTION_BANK = {
     },
     primary: {
         label: "PRIMARY BLOCK",
-        topics: {
-            basic_math: { label: "Basic Math" },
-            english: { label: "English" },
-            hindi: { label: "Hindi" },
-            science: { label: "Science" },
-            reading: { label: "Reading Comprehension" },
-        },
+
+        ageGroups: {
+            "4-6": {
+                label: "4–6 Years",
+                topics: {
+                    basic_math: { label: "Basic Math" },
+                    english: { label: "English" },
+                    reading: { label: "Reading" },
+                    shlok: {
+                        label: "Shlok",
+                        kind: "content",
+                        route: "/primary/shlok"
+                    }
+                }
+            },
+
+            "6-8": {
+                label: "6–8 Years",
+                topics: {
+                    basic_math: { label: "Basic Math" },
+                    english: { label: "English" },
+                    science: { label: "Science" },
+                    reading: { label: "Reading Comprehension" },
+                    shlok: {
+                        label: "Shlok",
+                        kind: "content",
+                        route: "/primary/shlok"
+                    }
+                }
+            }
+        }
     },
 };

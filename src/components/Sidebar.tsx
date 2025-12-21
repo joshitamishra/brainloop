@@ -2,35 +2,73 @@
 
 import SidebarTopicLink from "@/components/SidebarTopicLink";
 import UserPanel from "@/components/UserPanel";
-import { QUESTION_BANK } from "@/data/questions-client";
+import { QUESTION_BANK } from "@/data/questions";
 
 export default function Sidebar() {
     return (
         <aside className="w-64 h-screen border-r border-[#2d2d30] bg-[#161618] p-6 overflow-y-auto">
+            {Object.entries(QUESTION_BANK).map(([categoryKey, category]) => {
+                // PRIMARY BLOCK (uses ageGroups)
+                if (categoryKey === "primary") {
+                    if (!category.ageGroups) return null;
 
-            {Object.entries(QUESTION_BANK).map(([categoryKey, category]) => (
-                <div key={categoryKey} className="mb-8">
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase mb-4 tracking-wider">
-                        {category.label}
-                    </h3>
+                    return (
+                        <div key={categoryKey} className="mb-8">
+                            <h3 className="text-sm font-semibold text-gray-400 uppercase mb-4 tracking-wider">
+                                {category.label}
+                            </h3>
 
-                    <div className="space-y-2">
-                        {Object.entries(category.topics).map(([topicKey, topic]) => (
-                            <SidebarTopicLink
-                                key={topicKey}
-                                href={`/quiz/start?topic=${topicKey}&category=${categoryKey}`}
-                            >
-                                {topic.label}
-                            </SidebarTopicLink>
-                        ))}
+                            {Object.entries(category.ageGroups).map(([ageKey, ageGroup]) => (
+                                <div key={ageKey} className="mb-4 ml-2">
+                                    <h4 className="text-xs text-gray-500 mb-2">
+                                        {ageGroup.label}
+                                    </h4>
+
+                                    <div className="space-y-1">
+                                        {Object.entries(ageGroup.topics ?? {}).map(([topicKey, topic]) => (
+                                            <SidebarTopicLink
+                                                key={topicKey}
+                                                href={
+                                                    topic.type === "content"
+                                                        ? topic.route
+                                                        : `/quiz/start?category=primary&age=${ageKey}&topic=${topicKey}`
+                                                }
+                                            >
+                                                {topic.label}
+                                            </SidebarTopicLink>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    );
+                }
+
+                // NON-PRIMARY categories (old structure)
+                if (!category.topics) return null;
+
+                return (
+                    <div key={categoryKey} className="mb-8">
+                        <h3 className="text-sm font-semibold text-gray-400 uppercase mb-4 tracking-wider">
+                            {category.label}
+                        </h3>
+
+                        <div className="space-y-2">
+                            {Object.entries(category.topics ?? {}).map(([topicKey, topic]) => (
+                                <SidebarTopicLink
+                                    key={topicKey}
+                                    href={`/quiz/start?category=${categoryKey}&topic=${topicKey}`}
+                                >
+                                    {topic.label}
+                                </SidebarTopicLink>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            ))}
-
+                );
+            })}
             <div className="mt-10 border-t border-[#2d2d30] pt-4">
                 <UserPanel />
             </div>
-
         </aside>
     );
 }
