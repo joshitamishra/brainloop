@@ -41,7 +41,7 @@ export default function QuizSessionPage() {
      * 🚪 3. HANDLE EXIT BACK TO MAIN PAGE
      *──────────────────────────────────────────*/
     function handleExit() {
-        router.push("/"); 
+        router.push("/");
     }
 
     /**──────────────────────────────────────────
@@ -52,6 +52,7 @@ export default function QuizSessionPage() {
             <QuizUI
                 topic={topic}
                 category={category}
+                userName={session?.user?.name}
                 onExit={handleExit}
             />
         </div>

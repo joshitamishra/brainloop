@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 import { loadAIQuestions, saveAIQuestions } from "@/lib/db";
-import { loadPrimaryQuestions } from "@/lib/loadPrimaryQuestions";
+import { loadStaticQuestions } from "@/lib/loadStaticQuestions";
 
 export default function QuizStartPage() {
     const router = useRouter();
@@ -15,41 +15,33 @@ export default function QuizStartPage() {
     // URL params
     const category = searchParams.get("category");
     const topicKey = searchParams.get("topic");
-    const age = searchParams.get("age"); // required for primary
+    const age = searchParams.get("age"); // only for primary
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    // Prevent double execution (React strict mode)
     const initCalled = useRef(false);
 
-    /* ✅ ADD THIS RESET EFFECT */
+    /* 🔄 RESET WHEN URL CHANGES */
     useEffect(() => {
-        // 🔄 reset ALL quiz state when URL changes
         setError("");
         setLoading(true);
         initCalled.current = false;
 
-        // also clear stale session data
         sessionStorage.removeItem("currentSessionQuestions");
         sessionStorage.removeItem("quiz_session_active");
     }, [category, topicKey, age]);
 
-    // -----------------------------
-    // Auth guard
-    // -----------------------------
+    /* 🔐 AUTH GUARD */
     useEffect(() => {
         if (status === "unauthenticated") {
             router.push("/login");
         }
     }, [status, router]);
 
-    // -----------------------------
-    // Main init
-    // -----------------------------
+    /* 🚀 MAIN INIT */
     useEffect(() => {
         if (status !== "authenticated") return;
-
         if (!category || !topicKey) {
             router.push("/topic");
             return;
@@ -61,37 +53,23 @@ export default function QuizStartPage() {
         async function init() {
             setLoading(true);
 
-            /* =====================================================
-               PRIMARY BLOCK (STATIC, AGE-BASED)
-            ===================================================== */
-            if (category === "primary") {
-                if (!age) {
-                    setError("Missing age group.");
-                    setLoading(false);
-                    return;
-                }
+            /* ================================
+               1️⃣ TRY STATIC QUESTIONS FIRST
+            ================================= */
+            const staticQuestions = await loadStaticQuestions({
+                category,
+                topic: topicKey,
+                age,
+            });
 
-                try {
-                    const questions = await loadPrimaryQuestions(age, topicKey);
-
-                    if (!questions || questions.length === 0) {
-                        setError("No questions found for this topic.");
-                        setLoading(false);
-                        return;
-                    }
-                    beginSession(questions);
-                    return;
-                } catch (err) {
-                    console.error("Primary load error:", err);
-                    setError("Failed to load primary content.");
-                    setLoading(false);
-                    return;
-                }
+            if (staticQuestions && staticQuestions.length > 0) {
+                beginSession(staticQuestions);
+                return;
             }
 
-            /* =====================================================
-               NON-PRIMARY (AI / STATIC)
-            ===================================================== */
+            /* ================================
+               2️⃣ FALLBACK → AI
+            ================================= */
             const cached = await loadAIQuestions(topicKey);
             if (cached && cached.length > 0) {
                 beginSession(cached);
@@ -108,16 +86,14 @@ export default function QuizStartPage() {
                 const data = await res.json();
 
                 if (!data.questions || !Array.isArray(data.questions)) {
-                    setError("Failed to generate questions.");
-                    setLoading(false);
-                    return;
+                    throw new Error("Invalid AI response");
                 }
 
                 await saveAIQuestions(topicKey, data.questions);
                 beginSession(data.questions);
             } catch (err) {
-                console.error("Generate error:", err);
-                setError("Failed to contact AI engine.");
+                console.error("❌ AI generation failed:", err);
+                setError("Failed to load questions.");
                 setLoading(false);
             }
         }
@@ -125,18 +101,12 @@ export default function QuizStartPage() {
         init();
     }, [status, category, topicKey, age, router]);
 
-    // -----------------------------
-    // Start session
-    // -----------------------------
+    /* ▶️ START SESSION */
     function beginSession(questions: any[]) {
-        //clear bad session
-        sessionStorage.removeItem("currentSessionQuestions");
-
         sessionStorage.setItem(
             "currentSessionQuestions",
             JSON.stringify(questions)
         );
-
         sessionStorage.setItem("quiz_session_active", "true");
 
         router.push(
@@ -144,27 +114,19 @@ export default function QuizStartPage() {
         );
     }
 
-    // -----------------------------
-    // UI states
-    // -----------------------------
+    /* 🖥 UI STATES */
     if (status === "loading") {
         return <div className="p-10">Checking login…</div>;
     }
 
     if (error) {
-        return (
-            <div className="text-red-400 text-lg p-6">
-                ❌ {error}
-            </div>
-        );
+        return <div className="text-red-400 text-lg p-6">❌ {error}</div>;
     }
 
     if (loading) {
         return (
             <div className="p-10 text-center space-y-6">
-                <h2 className="text-2xl font-semibold">
-                    Preparing your session…
-                </h2>
+                <h2 className="text-2xl font-semibold">Preparing your session…</h2>
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-400 mx-auto" />
                 <p className="text-gray-400">Please wait a moment.</p>
             </div>

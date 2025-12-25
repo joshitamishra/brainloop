@@ -38,10 +38,12 @@ function showBalloons() {
 export default function QuizUI({
     topic,
     category,
+    userName,
     onExit,
 }: {
     topic: string;
     category?: string | null;
+    userName?: string | null;
     onExit: () => void;
 }) {
     /* -------------------------------------------
@@ -139,6 +141,13 @@ export default function QuizUI({
     return (
         <div className="w-full max-w-2xl flex flex-col gap-8 animate-fadeIn">
 
+            {/* User Name (Top Left) */}
+            {userName && (
+                <div className="text-sm font-medium text-gray-400">
+                    {userName}
+                </div>
+            )}
+
             {/* Header */}
             <div className="flex justify-between items-center">
                 <h2 className="text-3xl font-bold capitalize">{topic} Quiz</h2>
@@ -153,8 +162,8 @@ export default function QuizUI({
                 <div
                     key={i}
                     className={`rounded-xl p-4 mb-4 border ${entry.correct
-                            ? "bg-green-900/20 border-green-600"
-                            : "bg-red-900/20 border-red-600"
+                        ? "bg-green-900/20 border-green-600"
+                        : "bg-red-900/20 border-red-600"
                         }`}
                 >
                     <p className="text-lg font-semibold text-white mb-1">

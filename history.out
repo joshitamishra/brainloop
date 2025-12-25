@@ -1,0 +1,16 @@
+ 1028  npm run build
+ 1029  clear
+ 1030  npm run build
+ 1031  npm run build
+ 1032  npm run build
+ 1033  npm run build
+ 1034  npm run build
+ 1035  npm run build
+ 1036  npm run build
+ 1037  ollama list
+ 1038  ollama
+ 1039  ollama list
+ 1040  clear
+ 1041  ollama serve
+ 1042  docker images
+ 1043  docker images | grep pgvector

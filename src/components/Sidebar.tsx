@@ -7,6 +7,9 @@ import { QUESTION_BANK } from "@/data/questions";
 export default function Sidebar() {
     return (
         <aside className="w-64 h-screen border-r border-[#2d2d30] bg-[#161618] p-6 overflow-y-auto">
+            <div className="mb-8 border-b border-[#2d2d30] pb-4">
+                <UserPanel />
+            </div>
             {Object.entries(QUESTION_BANK).map(([categoryKey, category]) => {
                 // PRIMARY BLOCK (uses ageGroups)
                 if (categoryKey === "primary") {
@@ -47,6 +50,8 @@ export default function Sidebar() {
                 // NON-PRIMARY categories (old structure)
                 if (!category.topics) return null;
 
+                const isLocked = ["math", "physics", "chemistry"].includes(categoryKey);
+
                 return (
                     <div key={categoryKey} className="mb-8">
                         <h3 className="text-sm font-semibold text-gray-400 uppercase mb-4 tracking-wider">
@@ -57,7 +62,8 @@ export default function Sidebar() {
                             {Object.entries(category.topics ?? {}).map(([topicKey, topic]) => (
                                 <SidebarTopicLink
                                     key={topicKey}
-                                    href={`/quiz/start?category=${categoryKey}&topic=${topicKey}`}
+                                    href={isLocked ? "/premium" : `/quiz/start?category=${categoryKey}&topic=${topicKey}`}
+                                    locked={isLocked}
                                 >
                                     {topic.label}
                                 </SidebarTopicLink>
@@ -67,7 +73,7 @@ export default function Sidebar() {
                 );
             })}
             <div className="mt-10 border-t border-[#2d2d30] pt-4">
-                <UserPanel />
+                {/* UserPanel moved to top */}
             </div>
         </aside>
     );

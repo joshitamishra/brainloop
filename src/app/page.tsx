@@ -2,11 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
-  const { status } = useSession();
-
+  const { status, data: session } = useSession();
   const handleStart = () => {
     if (status === "authenticated") {
       router.push("/topic");
@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center mt-16 space-y-6 animate-fadeIn">
       <h2 className="text-4xl font-bold text-slate-700 dark:text-slate-200">
-        Welcome to Brainloop
+        Welcome {session?.user?.name ? `, ${session.user.name}` : "to Brainloop"}
       </h2>
 
       <p className="text-lg text-slate-600 dark:text-slate-300 text-center max-w-xl">

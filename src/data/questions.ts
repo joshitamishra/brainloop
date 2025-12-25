@@ -73,39 +73,7 @@ export const QUESTION_BANK = {
                 ],
             },
             geography: {
-                label: "Geography",
-                questions: [
-                    { q: "Which is the largest continent in the world?", a: "Asia" },
-                    { q: "What percentage of Earth's surface is covered by water?", a: "Approximately 71%" },
-                    { q: "Which is the longest river in the world?", a: "The Nile River" },
-                    { q: "Which is the largest ocean on Earth?", a: "Pacific Ocean" },
-                    { q: "Which country has the largest population?", a: "China" },
-                    { q: "What is the driest desert in the world?", a: "The Atacama Desert" },
-                    { q: "Which mountain range contains Mount Everest?", a: "The Himalayas" },
-                    { q: "Which layer of the Earth do we live on?", a: "The crust" },
-                    { q: "What is the Earth’s largest island?", a: "Greenland" },
-                    { q: "What is the capital of Japan?", a: "Tokyo" },
-                    { q: "What is the capital of Australia?", a: "Canberra" },
-                    { q: "What is the capital of Canada?", a: "Ottawa" },
-                    { q: "What is the capital of Brazil?", a: "Brasília" },
-                    { q: "What is the capital of India?", a: "New Delhi" },
-                    { q: "Which two continents are entirely in the Southern Hemisphere?", a: "Australia and Antarctica" },
-                    { q: "What is the term for a chain of islands?", a: "Archipelago" },
-                    { q: "What is the capital of Germany?", a: "Berlin" },
-                    { q: "What is the capital of the United Kingdom?", a: "London" },
-                    { q: "What is the capital of China?", a: "Beijing" },
-                    { q: "What is the capital of Mexico?", a: "Mexico City" },
-                    { q: "What is the capital of Spain?", a: "Madrid" },
-                    { q: "Which country has the most natural lakes?", a: "Canada" },
-                    { q: "What is the capital of France?", a: "Paris" },
-                    { q: "What is the capital of Italy?", a: "Rome" },
-                    { q: "What is the deepest point in the ocean?", a: "The Mariana Trench" },
-                    { q: "Which continent is also a country?", a: "Australia" },
-                    { q: "What is the imaginary line that divides Earth into Northern and Southern hemispheres?", a: "The Equator" },
-                    { q: "What is the capital of Russia?", a: "Moscow" },
-                    { q: "What is the capital of Egypt?", a: "Cairo" },
-                    { q: "What is the capital of South Africa?", a: "Pretoria" },
-                    ]
+                label: "Geography"
             },
         },
     },
@@ -136,22 +104,36 @@ export const QUESTION_BANK = {
             microsoft_excel: {
                 label: "Microsoft Excel",
                 questions: [
-                    { q: "Which Excel formula adds all numbers in the range A1 to A10?", a: "=SUM(A1:A10)" },
-                    { q: "Which function returns the average of values in a range?", a: "=AVERAGE(range)" },
-                    { q: "Which function returns the number of non-empty cells in a range?", a: "=COUNTA(range)" },
-                    { q: "Which function returns the maximum value in a range?", a: "=MAX(range)" },
-                    { q: "What formula finds the minimum value in a range?", a: "=MIN(range)" },
-                    { q: "Which formula returns the number of cells containing numbers?", a: "=COUNT(range)" },
-                    { q: "Which function looks up a value vertically in a table?", a: "=VLOOKUP(lookup_value, table_array, col_index, FALSE)" },
-                    { q: "Which function finds text length in a cell?", a: "=LEN(cell)" },
-                    { q: "Which formula joins text values together?", a: "=CONCAT(text1, text2, ...)" },
-                    { q: "Which formula extracts the first 5 characters from A1?", a: "=LEFT(A1, 5)" },
-                    { q: "Which formula extracts the last 4 characters from A1?", a: "=RIGHT(A1, 4)" },
-                    { q: "Which Excel function returns the current date?", a: "=TODAY()" },
-                    { q: "Which function replaces VLOOKUP with a more flexible search?", a: "=XLOOKUP(lookup, lookup_array, return_array)" },
-                    { q: "Which function rounds a number in A1 to 2 decimal places?", a: "=ROUND(A1, 2)" },
-                    { q: "Which function adds values that meet a condition?", a: "=SUMIF(range, criteria, sum_range)" }
-                ],
+                    { q: "Which function adds numbers?", a: "SUM" },
+
+                    { q: "Which function calculates average?", a: "AVERAGE" },
+
+                    { q: "Which function counts numeric cells?", a: "COUNT" },
+
+                    { q: "Which function counts non-empty cells?", a: "COUNTA" },
+
+                    { q: "Which function finds highest value?", a: "MAX" },
+
+                    { q: "Which function finds lowest value?", a: "MIN" },
+
+                    { q: "Which function applies a condition?", a: "IF" },
+
+                    { q: "Which function removes extra spaces?", a: "TRIM" },
+
+                    { q: "Which function returns text length?", a: "LEN" },
+
+                    { q: "Which function joins text values?", a: "CONCAT" },
+
+                    { q: "Which function replaces VLOOKUP?", a: "XLOOKUP" },
+
+                    { q: "Which function performs vertical lookup?", a: "VLOOKUP" },
+
+                    { q: "Which function returns today date?", a: "TODAY" },
+
+                    { q: "Which function rounds numbers?", a: "ROUND" },
+
+                    { q: "Which function sums by condition?", a: "SUMIF" }
+              ],
             },
         }
     },

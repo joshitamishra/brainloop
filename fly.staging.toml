@@ -1,12 +1,12 @@
-app = "brainloop"
+app = "brainloop-staging"
 primary_region = "bom"
 
 [build]
-  dockerfile = "./Dockerfile.prod"
+  dockerfile = "./Dockerfile"
 
 [env]
   PORT = "3000"
-  FLY_APP_NAME = "brainloop"
+  FLY_APP_NAME = "brainloop-staging"
 
 [http_service]
   internal_port = 3000
@@ -20,3 +20,4 @@ primary_region = "bom"
   cpu_kind = "shared"
   cpus = 1
   memory = "1gb"
+

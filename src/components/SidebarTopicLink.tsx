@@ -8,12 +8,14 @@ type Props = {
     href: string;
     children: ReactNode;
     isContent?: boolean;
+    locked?: boolean;
 };
 
 export default function SidebarTopicLink({
     href,
     children,
     isContent = false,
+    locked = false,
 }: Props) {
     const { data: session } = useSession();
 
@@ -46,9 +48,10 @@ export default function SidebarTopicLink({
         <Link
             href={href}
             onClick={handleClick}
-            className="block px-3 py-2 rounded-md hover:bg-[#2a2a2d] transition"
+            className="flex items-center justify-between px-3 py-2 rounded-md hover:bg-[#2a2a2d] transition group"
         >
-            {children}
+            <span>{children}</span>
+            {locked && <span className="text-xs text-gray-500 group-hover:text-amber-500">🔒</span>}
         </Link>
     );
 }

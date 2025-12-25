@@ -49,53 +49,49 @@ function cleanLLMJson(text: string): string {
 
 export async function POST(request: Request) {
     console.log("🔵 [API] /api/generate called");
-
     const { topic, category } = await request.json();
-
     console.log("📥 Requested topic:", topic);
 
     if (!topic) {
         return NextResponse.json({ error: "Missing topic" }, { status: 400 });
     }
     let prompt;
-    if (category === "primary" || category === "chemistry") {
+    if (category === "primary" || category === "chemistry" || category === "" || category === "gk" || category == "computer") {
         /* prompt = `
- You are an expert children's educator. Create EXACTLY 5 kid-friendly questions for the topic "${topic}".
- Return ONLY valid JSON. No commentary. No backticks.
+        You are an expert children's educator. Create EXACTLY 5 kid-friendly questions for the topic "${topic}".
+        Return ONLY valid JSON. No commentary. No backticks.
+        
+        Each question should follow this structure:
+        {
+        "difficulty": "easy",
+        "type": "kid",
+        "question": "string"
+        }
  
- Each question should follow this structure:
- {
-   "difficulty": "easy",
-   "type": "kid",
-   "question": "string"
- }
- 
- Rules:
- - Use simple vocabulary (ages 5–10).
- - Use fun, friendly tone.
- - No equations unless extremely simple (1+2 type).
- - No abstract concepts.
- - Use animals, shapes, colors, food, nature.
- - Return ONLY the JSON array.
- `; */
+        Rules:
+        - Use simple vocabulary (ages 5–10).
+        - Use fun, friendly tone.
+        - No equations unless extremely simple (1+2 type).
+        - No abstract concepts.
+        - Use animals, shapes, colors, food, nature.
+        - Return ONLY the JSON array.
+        `; */
         console.log("Skipping AI. Using static questions only.");
-
         return;
     } else {
         prompt = `
-You are an expert tutor. Create EXACTLY 5 questions for the topic "${topic}".
-Return ONLY valid JSON. No backticks. No commentary.
+        You are an expert tutor. Create EXACTLY 5 questions for the topic "${topic}".
+        Return ONLY valid JSON. No backticks. No commentary.
 
-Each question must follow this format:
-{
-  "difficulty": "easy|medium|conceptual|applied|advanced",
-  "type": "recall|apply|explain|solve|generalize",
-  "question": "string"
-}
+        Each question must follow this format:
+        {
+        "difficulty": "easy|medium|conceptual|applied|advanced",
+        "type": "recall|apply|explain|solve|generalize",
+        "question": "string"
+        }
 
-Return only JSON array.
-`}
-
+        Return only JSON array.`
+    }
     try {
         console.log("📡 Sending request to Ollama…");
 

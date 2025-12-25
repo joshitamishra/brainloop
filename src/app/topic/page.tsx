@@ -59,6 +59,13 @@ export default function TopicPage() {
             router.push("/login");
             return;
         }
+
+        // 🔒 Check for premium content
+        if (["math", "physics", "chemistry"].includes(category)) {
+            router.push("/premium");
+            return;
+        }
+
         console.log("Topic key:", key);
         console.log("Category:", category);
         router.push(`/quiz/start?topic=${key}&category=${category}`);
@@ -91,7 +98,10 @@ export default function TopicPage() {
                             onClick={() => goToTopic(t.key, "math")}
                             className="p-4 bg-white dark:bg-slate-800 border rounded-xl shadow hover:shadow-lg transition-all hover:scale-[1.02] text-left text-slate-900 dark:text-white"
                         >
-                            {t.label}
+                            <span className="flex justify-between items-center w-full">
+                                {t.label}
+                                <span className="text-sm text-gray-400">🔒</span>
+                            </span>
                         </button>
                     ))}
                 </div>
@@ -107,7 +117,10 @@ export default function TopicPage() {
                             onClick={() => goToTopic(t.key, "physics")}
                             className="p-4 bg-white dark:bg-slate-800 border rounded-xl shadow hover:shadow-lg transition-all hover:scale-[1.02] text-left text-slate-900 dark:text-white"
                         >
-                            {t.label}
+                            <span className="flex justify-between items-center w-full">
+                                {t.label}
+                                <span className="text-sm text-gray-400">🔒</span>
+                            </span>
                         </button>
                     ))}
                 </div>
@@ -123,7 +136,10 @@ export default function TopicPage() {
                             onClick={() => goToTopic(t.key, "chemistry")}
                             className="p-4 bg-white dark:bg-slate-800 border rounded-xl shadow hover:shadow-lg transition-all hover:scale-[1.02] text-left text-slate-900 dark:text-white"
                         >
-                            {t.label}
+                            <span className="flex justify-between items-center w-full">
+                                {t.label}
+                                <span className="text-sm text-gray-400">🔒</span>
+                            </span>
                         </button>
                     ))}
                 </div>
@@ -193,6 +209,6 @@ export default function TopicPage() {
                     </div>
                 ))}
             </div>
-        </div>  
+        </div>
     );
 }

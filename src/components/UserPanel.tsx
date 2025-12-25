@@ -19,7 +19,7 @@ export default function UserPanel() {
     return (
         <div>
             <p className="text-sm text-gray-300 mb-2">
-                Signed in as <span className="text-white">{session.user.username}</span>
+                Signed in as <span className="text-white">{session.user.name || session.user.username}</span>
             </p>
 
             <button
