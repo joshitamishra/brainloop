@@ -4,13 +4,20 @@
 import { getClientIP, getLocationFromIP, getUserAgent } from "./geolocation";
 import { getDbClient } from "./db-server";
 
-export async function trackVisit(req: Request, email?: string) {
+export async function trackVisit(req: Request, email?: string, overrides?: { ip?: string, userAgent?: string }) {
     // Fire and forget - don't block the request
     Promise.resolve().then(async () => {
         try {
-            const ip = getClientIP(req);
+            let ip = overrides?.ip || getClientIP(req);
+            // If IP is a comma-separated list (from x-forwarded-for), take the first one
+            if (ip.includes(',')) {
+                ip = ip.split(',')[0].trim();
+            }
+            // Truncate to 45 chars just in case (max for IPv6)
+            ip = ip.substring(0, 45);
+
             const location = await getLocationFromIP(ip);
-            const userAgent = getUserAgent(req);
+            const userAgent = overrides?.userAgent || getUserAgent(req);
             const today = new Date().toISOString().split("T")[0];
 
             const client = getDbClient();
@@ -87,11 +94,12 @@ export async function trackVisit(req: Request, email?: string) {
                     );
 
                     if (existingLocation.rows.length > 0) {
-                        // Update last_login timestamp only, don't increment login count
+                        // Update last_login timestamp and increment count
                         await client.query(
                             `
                             UPDATE locations 
                             SET 
+                                number_of_logins_today = number_of_logins_today + 1,
                                 last_login = CURRENT_TIMESTAMP,
                                 ip_address = $1,
                                 user_agent = $2,
@@ -101,11 +109,11 @@ export async function trackVisit(req: Request, email?: string) {
                             [ip, userAgent, existingLocation.rows[0].id]
                         );
                     } else {
-                        // Create new location record with login_count = 0 (not a login, just a visit)
+                        // Create new location record with login_count = 1
                         await client.query(
                             `
                             INSERT INTO locations (email, location, last_login, login_date, number_of_logins_today, ip_address, user_agent)
-                            VALUES ($1, $2, CURRENT_TIMESTAMP, $3, 0, $4, $5)
+                            VALUES ($1, $2, CURRENT_TIMESTAMP, $3, 1, $4, $5)
                             `,
                             [anonymousEmail, location, today, ip, userAgent]
                         );

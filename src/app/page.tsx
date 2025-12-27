@@ -34,6 +34,10 @@ export default function Home() {
         Quick 05-minutes revision loops to strengthen your memory.
       </p>
 
+      <p className="text-md text-slate-500 dark:text-slate-400 text-center max-w-2xl italic mt-2">
+        A website to refresh your high school skills, better time utilisation and gradually making you stronger in concepts
+      </p>
+
       <button
         onClick={handleStart}
         className="px-8 py-4 bg-rose-500 hover:bg-rose-600 text-white text-xl rounded-xl shadow-lg transition-all hover:scale-105 active:scale-95"

@@ -10,10 +10,14 @@ export async function POST(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
         const email = session?.user?.email || undefined;
+        console.log(`[Track-Visit] User: ${email || 'anonymous'}`);
 
-        // Use the incoming request directly - it has all the headers we need
+        const body = await req.json();
+        const { ip, userAgent } = body;
+
         // Track visit (non-blocking)
-        trackVisit(req, email).catch((error) => {
+        // We pass the data from the body to override the request headers
+        trackVisit(req, email, { ip, userAgent }).catch((error) => {
             console.error('[Track-Visit API] Error tracking visit:', error);
         });
 

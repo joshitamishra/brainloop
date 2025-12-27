@@ -13,7 +13,12 @@ export async function POST(req: Request) {
         }
 
         // Get IP and location
-        const ip = getClientIP(req);
+        let ip = getClientIP(req);
+        if (ip.includes(',')) {
+            ip = ip.split(',')[0].trim();
+        }
+        ip = ip.substring(0, 45);
+
         const location = await getLocationFromIP(ip);
         const userAgent = getUserAgent(req);
         const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format

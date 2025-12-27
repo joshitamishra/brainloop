@@ -3,12 +3,22 @@
 import SidebarTopicLink from "@/components/SidebarTopicLink";
 import UserPanel from "@/components/UserPanel";
 import { QUESTION_BANK } from "@/data/questions";
+import { TrendingUp } from "lucide-react";
 
 export default function Sidebar() {
     return (
         <aside className="w-64 h-screen border-r border-[#2d2d30] bg-[#161618] p-6 overflow-y-auto">
             <div className="mb-8 border-b border-[#2d2d30] pb-4">
                 <UserPanel />
+            </div>
+
+            <div className="mb-8">
+                <SidebarTopicLink href="/progress">
+                    <div className="flex items-center gap-2">
+                        <TrendingUp className="w-4 h-4 text-purple-400" />
+                        <span>AI Analysis</span>
+                    </div>
+                </SidebarTopicLink>
             </div>
             {Object.entries(QUESTION_BANK).map(([categoryKey, category]) => {
                 // PRIMARY BLOCK (uses ageGroups)

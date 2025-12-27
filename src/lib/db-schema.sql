@@ -27,10 +27,26 @@ CREATE TABLE IF NOT EXISTS locations (
     FOREIGN KEY (email) REFERENCES users(email) ON DELETE CASCADE
 );
 
+-- Quiz Results table (Added for progress tracking)
+CREATE TABLE IF NOT EXISTS quiz_results (
+    id SERIAL PRIMARY KEY,
+    user_email VARCHAR(255) NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    score INTEGER NOT NULL,
+    total_questions INTEGER NOT NULL,
+    time_taken_seconds INTEGER NOT NULL,
+    details JSONB, -- Stores question-level details (question, answer, correct, time_spent)
+    completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE
+);
+
 -- Indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_locations_email ON locations(email);
 CREATE INDEX IF NOT EXISTS idx_locations_login_date ON locations(login_date);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_quiz_results_user_email ON quiz_results(user_email);
+CREATE INDEX IF NOT EXISTS idx_quiz_results_completed_at ON quiz_results(completed_at);
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -47,4 +63,3 @@ CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
 
 CREATE TRIGGER update_locations_updated_at BEFORE UPDATE ON locations
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-

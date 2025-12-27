@@ -130,6 +130,36 @@ export default function QuizUI({
     }
 
     /* -------------------------------------------
+       💾 SAVE RESULTS
+    ------------------------------------------- */
+    const savedRef = useRef(false);
+
+    useEffect(() => {
+        if (isFinished && !savedRef.current) {
+            savedRef.current = true;
+            const timeTaken = 300 - timeLeft;
+
+            fetch("/api/quiz/result", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    category: category || "unknown",
+                    topic: topic,
+                    score: correctCount,
+                    totalQuestions: totalQuestions,
+                    timeTaken: timeTaken,
+                    details: submittedQuestions.map((sq) => ({
+                        question: sq.q.q || sq.q.text,
+                        answer: sq.q.answer || sq.q.a,
+                        userAnswer: sq.userAnswer,
+                        correct: sq.correct,
+                    })),
+                }),
+            }).catch((err) => console.error("Failed to save result:", err));
+        }
+    }, [isFinished, category, topic, correctCount, totalQuestions, timeLeft, submittedQuestions]);
+
+    /* -------------------------------------------
        🎨 RENDER
     ------------------------------------------- */
     if (!loaded) return <div className="p-10">Loading questions…</div>;

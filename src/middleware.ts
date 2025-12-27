@@ -20,6 +20,7 @@ export default function middleware(req: NextRequest) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Cookie': req.headers.get('cookie') || '',
         },
         body: JSON.stringify({
             url: req.url,
