@@ -1,52 +1,52 @@
 export const questions = [
     {
-        passage: "The cat is on the mat.",
-        q: "Where is the cat?",
-        a: "On the mat"
+        passage: "The tree is tall and green.",
+        q: "What is tall and green?",
+        a: "The tree"
     },
     {
-        passage: "The boy has a ball.",
-        q: "What does the boy have?",
-        a: "A ball"
+        passage: "Mom bakes a cake.",
+        q: "What does Mom bake?",
+        a: "A cake"
     },
     {
-        passage: "The sun is hot.",
-        q: "What is hot?",
-        a: "The sun"
+        passage: "The rain falls down.",
+        q: "What falls down?",
+        a: "The rain"
     },
     {
-        passage: "The dog can run.",
-        q: "What can the dog do?",
-        a: "Run"
+        passage: "The horse can gallop.",
+        q: "What can the horse do?",
+        a: "Gallop"
     },
     {
-        passage: "The apple is red.",
-        q: "What color is the apple?",
-        a: "Red"
+        passage: "The grape is purple.",
+        q: "What color is the grape?",
+        a: "Purple"
     },
     {
-        passage: "The girl can jump.",
-        q: "What can the girl do?",
-        a: "Jump"
+        passage: "Dad reads a book.",
+        q: "What does Dad read?",
+        a: "A book"
     },
     {
-        passage: "The bird can fly.",
-        q: "What can the bird do?",
-        a: "Fly"
+        passage: "The bee can buzz.",
+        q: "What can the bee do?",
+        a: "Buzz"
     },
     {
-        passage: "The fish is in water.",
-        q: "Where is the fish?",
-        a: "In water"
+        passage: "The boat is on the lake.",
+        q: "Where is the boat?",
+        a: "On the lake"
     },
     {
-        passage: "The car is fast.",
-        q: "What is fast?",
-        a: "The car"
+        passage: "The ice cream is cold.",
+        q: "What is cold?",
+        a: "The ice cream"
     },
     {
-        passage: "The baby is happy.",
-        q: "Who is happy?",
-        a: "The baby"
+        passage: "The puppy is playful.",
+        q: "Who is playful?",
+        a: "The puppy"
     }
 ];

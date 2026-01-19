@@ -1,12 +1,17 @@
 export const questions = [
-    { q: "Choose the conjunction: I wanted to play, ___ it started to rain.", a: "but" },
-    { q: "Fill in the blank with a conjunction: You can have tea ___ juice.", a: "or" },
-    { q: "Choose the conjunction: She was tired ___ she finished her homework.", a: "but" },
-    { q: "Fill in the blank: I will go to the park ___ my friend comes.", a: "if" },
-    { q: "Choose the conjunction: He is small ___ strong.", a: "but" },
-    { q: "Pick the noun: The dog chased the ball.", a: "dog" },
-    { q: "Choose the noun: The teacher wrote on the board.", a: "teacher" },
-    { q: "Fill in the blank with a noun: The ___ is barking loudly.", a: "dog" },
-    { q: "Pick the noun: The sun is shining brightly.", a: "sun" },
-    { q: "Choose the noun: The children played in the garden.", a: "children" }
+    { q: "One Child, two...?", a: "Children" },
+    { q: "A group of lions is called a...?", a: "Pride" },
+    { q: "One Mouse, two...?", a: "Mice" },
+    { q: "A group of birds is called a...?", a: "Flock" },
+    { q: "One Tooth, two...?", a: "Teeth" },
+    { q: "A group of fish is called a...?", a: "School" },
+    { q: "One Goose, two...?", a: "Geese" },
+    { q: "A group of cows is called a...?", a: "Herd" },
+    { q: "One Man, two...?", a: "Men" },
+    { q: "A group of bees is called a...?", a: "Swarm" },
+    { q: "One Woman, two...?", a: "Women" },
+    { q: "A group of wolves is called a...?", a: "Pack" },
+    { q: "One Foot, two...?", a: "Feet" },
+    { q: "A group of sheep is called a...?", a: "Flock" },
+    { q: "One Ox, two...?", a: "Oxen" }
 ];

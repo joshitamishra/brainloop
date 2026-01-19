@@ -1,17 +1,52 @@
-export const questions = [
-    { q: "What do plants need to grow?", a: "Water" },
-    { q: "Which animal says moo?", a: "Cow" },
-    { q: "Where do fish live?", a: "Water" },
-    { q: "What do we use to see?", a: "Eyes" },
-    { q: "Which animal can fly?", a: "Bird" },
-    { q: "What color is the sun?", a: "Yellow" },
-    { q: "What do we use to hear?", a: "Ears" },
-    { q: "Which animal barks?", a: "Dog" },
-    { q: "What helps us breathe?", a: "Nose" },
-    { q: "Which animal gives milk?", a: "Cow" },
-    { q: "What comes out at night?", a: "Moon" },
-    { q: "What do we drink when we are thirsty?", a: "Water" },
-    { q: "Which animal hops?", a: "Frog" },
-    { q: "What do we wear on our feet?", a: "Shoes" },
-    { q: "What shines in the sky during the day?", a: "Sun" }
+export const earthScienceMCQs = [
+    {
+        q: "What covers most of Earth?",
+        options: ["Land", "Water", "Sky", "Air"],
+        a: 1  // Water
+    },
+    {
+        q: "What shape is Earth?",
+        options: ["Square", "Flat", "Round", "Triangle"],
+        a: 2  // Round
+    },
+    {
+        q: "What do we call Earth's surface?",
+        options: ["Sky", "Crust", "Ocean", "Cloud"],
+        a: 1  // Crust
+    },
+    {
+        q: "What spins Earth to make day and night?",
+        options: ["Moon", "Rotation", "Rain", "Wind"],
+        a: 1  // Rotation
+    },
+    {
+        q: "Where does Earth travel around?",
+        options: ["Moon", "Stars", "Sun", "Clouds"],
+        a: 2  // Sun
+    },
+    {
+        q: "What is inside Earth that is hot?",
+        options: ["Ice", "Water", "Core", "Sand"],
+        a: 2  // Core
+    },
+    {
+        q: "What color is Earth from space?",
+        options: ["Red", "Green", "Blue", "Black"],
+        a: 2  // Blue
+    },
+    {
+        q: "What pulls things down on Earth?",
+        options: ["Wind", "Gravity", "Rain", "Sun"],
+        a: 1  // Gravity
+    },
+    {
+        q: "What is Earth's special helper in the sky?",
+        options: ["Sun", "Stars", "Moon", "Cloud"],
+        a: 2  // Moon
+    },
+    {
+        q: "What do plants need from Earth?",
+        options: ["Sky", "Water", "Soil", "Fire"],
+        a: 2  // Soil
+    }
 ];

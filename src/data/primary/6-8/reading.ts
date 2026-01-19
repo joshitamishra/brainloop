@@ -1,51 +1,101 @@
 export const questions = [
     {
-        passage: `Liam walked to school with his sister every morning.
-They crossed the road carefully and waited for the green signal.
-On the way, they saw a baker opening his shop.
-The smell of fresh bread made Liam smile.`,
+        passage: `The Earth is round like a ball.
+It spins slowly every day.
+This spinning makes day and night for us.
+We live on the blue planet with oceans.`,
 
-        q: "Why did Liam and his sister wait before crossing the road?",
-        a: "Because they waited for the green signal"
+        q: "What shape is the Earth?",
+        a: "Round like a ball"
     },
 
     {
-        passage: `Sara found a shiny feather near the playground.
-It was long and had shades of blue and green.
-She gently picked it up and showed it to her teacher.
-The teacher said it might belong to a peacock.`,
+        passage: `Most of Earth is covered by water.
+Big oceans fill more than half the planet.
+Fish swim there and ships sail across.
+Land is where we walk and build homes.`,
 
-        q: "What made the feather special?",
-        a: "It was shiny and had blue and green shades"
+        q: "What covers most of Earth?",
+        a: "Water"
     },
 
     {
-        passage: `Every afternoon, Noah read a book under the mango tree.
-The tree gave him cool shade on hot days.
-Sometimes, birds sat quietly above him.
-Noah enjoyed reading in the peaceful place.`,
+        passage: `Earth travels around the Sun.
+This big trip takes one whole year.
+That's why we have seasons - spring, summer, fall, winter.
+The Sun keeps Earth warm and bright.`,
 
-        q: "Why did Noah like reading under the mango tree?",
-        a: "Because it was cool and peaceful"
+        q: "Where does Earth travel around?",
+        a: "The Sun"
     },
 
     {
-        passage: `On Saturday, the class visited a science museum.
-They saw models of planets and dinosaurs.
-The guide explained how the Earth moves around the Sun.
-The children listened carefully and asked many questions.`,
+        passage: `Inside Earth there is a hot core.
+Layers of rock sit above the hot center.
+Mountains, valleys, and caves are on the surface.
+Earthquakes sometimes shake the ground.`,
 
-        q: "What did the children learn about at the museum?",
-        a: "Planets, dinosaurs, and how the Earth moves around the Sun"
+        q: "What is inside Earth that is hot?",
+        a: "The core"
     },
 
     {
-        passage: `Maya helped her grandmother in the kitchen.
-She washed the vegetables and placed them in a bowl.
-Her grandmother smiled and thanked her.
-Maya felt useful and happy.`,
+        passage: `The Moon is Earth's best friend in the sky.
+It goes around Earth every month.
+At night, the Moon looks bright and silver.
+Sometimes we see the whole Moon or just a piece.`,
 
-        q: "How did Maya feel after helping her grandmother?",
-        a: "Useful and happy"
+        q: "What goes around Earth every month?",
+        a: "The Moon"
+    },
+
+    {
+        passage: `Gravity pulls everything down to Earth.
+That's why apples fall from trees.
+We stay on the ground instead of floating away.
+Gravity keeps our feet on the path.`,
+
+        q: "What pulls things down to Earth?",
+        a: "Gravity"
+    },
+
+    {
+        passage: `Plants grow in Earth's soil.
+They push roots deep into the ground.
+Rain water helps seeds become flowers.
+Trees give us shade and clean air.`,
+
+        q: "What do plants grow in on Earth?",
+        a: "Soil"
+    },
+
+    {
+        passage: `Earth looks blue from far away in space.
+White clouds float across the oceans.
+Green forests and brown deserts show too.
+Astronauts love seeing our beautiful home.`,
+
+        q: "What color does Earth look from space?",
+        a: "Blue"
+    },
+
+    {
+        passage: `Earth tilts as it spins and travels.
+This tilt makes summer and winter different.
+When our part tilts toward the Sun, days get hot.
+Winter comes when we tilt away.`,
+
+        q: "What makes seasons on Earth?",
+        a: "Tilt"
+    },
+
+    {
+        passage: `Earth's crust is the hard outside layer.
+Mountains grow tall from this crust.
+Rivers carve paths through rocks over time.
+We walk safely on Earth's crust every day.`,
+
+        q: "What is Earth's hard outside layer?",
+        a: "Crust"
     }
 ];
