@@ -48,10 +48,10 @@ export async function GET(req: Request) {
                 // Get overall analytics
                 query = `
                     SELECT 
-                        COUNT(DISTINCT u.id) as total_users,
-                        COUNT(DISTINCT CASE WHEN l.login_date >= CURRENT_DATE - INTERVAL '${days} days' THEN u.email END) as active_users,
-                        SUM(CASE WHEN l.login_date >= CURRENT_DATE - INTERVAL '${days} days' THEN l.number_of_logins_today ELSE 0 END) as total_visits,
-                        COUNT(DISTINCT CASE WHEN l.login_date >= CURRENT_DATE - INTERVAL '${days} days' THEN l.location END) as unique_locations,
+                        COUNT(DISTINCT u.id) FILTER (WHERE u.email NOT LIKE '%@visitor') as total_users,
+                        COUNT(DISTINCT CASE WHEN l.login_date >= CURRENT_DATE - INTERVAL '${days} days' AND u.email NOT LIKE '%@visitor' THEN u.email END) as active_users,
+                        SUM(CASE WHEN l.login_date >= CURRENT_DATE - INTERVAL '${days} days' AND l.email NOT LIKE '%@visitor' THEN l.number_of_logins_today ELSE 0 END) as total_visits,
+                        COUNT(DISTINCT CASE WHEN l.login_date >= CURRENT_DATE - INTERVAL '${days} days' AND l.email NOT LIKE '%@visitor' THEN l.location END) as unique_locations,
                         json_agg(
                             DISTINCT jsonb_build_object(
                                 'location', l.location,
@@ -60,12 +60,12 @@ export async function GET(req: Request) {
                                     FROM locations 
                                     WHERE location = l.location 
                                     AND login_date >= CURRENT_DATE - INTERVAL '${days} days'
+                                    AND email NOT LIKE '%@visitor'
                                 )
                             )
-                        ) FILTER (WHERE l.login_date >= CURRENT_DATE - INTERVAL '${days} days') as locations_breakdown
+                        ) FILTER (WHERE l.login_date >= CURRENT_DATE - INTERVAL '${days} days' AND l.email NOT LIKE '%@visitor') as locations_breakdown
                     FROM users u
                     LEFT JOIN locations l ON u.email = l.email
-                    WHERE u.email NOT LIKE '%@visitor'
                 `;
                 params = [];
             }
