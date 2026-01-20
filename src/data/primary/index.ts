@@ -1,7 +1,7 @@
 import { questions as basicMath46 } from "./4-6/basic_math";
 import { questions as english46 } from "./4-6/english";
 import { questions as science46 } from "./4-6/science";
-import { questions as reading46 } from "./4-6/reading";
+import { questions as reading46 } from "./4-6/reading_comprehension";
 
 import { questions as basicMath68 } from "./6-8/basic_math";
 import { questions as english68 } from "./6-8/english";
