@@ -40,7 +40,7 @@ export async function GET(req: Request) {
                     FROM users u
                     LEFT JOIN locations l ON u.email = l.email 
                         AND l.login_date >= CURRENT_DATE - INTERVAL '${days} days'
-                    WHERE u.email = $1
+                    WHERE u.email = $1 AND u.email NOT LIKE '%@visitor'
                     GROUP BY u.id, u.name, u.email, u.phoneno, u.created_at
                 `;
                 params = [email];
@@ -65,6 +65,7 @@ export async function GET(req: Request) {
                         ) FILTER (WHERE l.login_date >= CURRENT_DATE - INTERVAL '${days} days') as locations_breakdown
                     FROM users u
                     LEFT JOIN locations l ON u.email = l.email
+                    WHERE u.email NOT LIKE '%@visitor'
                 `;
                 params = [];
             }
@@ -79,6 +80,7 @@ export async function GET(req: Request) {
                     COUNT(DISTINCT email) as unique_users
                 FROM locations
                 WHERE login_date >= CURRENT_DATE - INTERVAL '${days} days'
+                    AND email NOT LIKE '%@visitor'
                 GROUP BY location
                 ORDER BY total_visits DESC
                 LIMIT 10
@@ -93,6 +95,7 @@ export async function GET(req: Request) {
                     COUNT(DISTINCT email) as unique_visitors
                 FROM locations
                 WHERE login_date >= CURRENT_DATE - INTERVAL '${days} days'
+                    AND email NOT LIKE '%@visitor'
                 GROUP BY login_date
                 ORDER BY login_date DESC
             `;
