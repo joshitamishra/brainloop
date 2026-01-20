@@ -192,7 +192,7 @@ export default function TopicPage() {
                                 <button
                                     key={topicKey}
                                     onClick={() => {
-                                        if ("kind" in topic && topic.kind === "content" && "route" in topic) {
+                                        if ("route" in topic && topic.route) {
                                             router.push(topic.route);
                                         } else {
                                             router.push(

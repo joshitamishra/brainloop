@@ -22,7 +22,7 @@ type Question = {
 /* -------------------------------------------
    🎈 BALLOONS FOR CORRECT ANSWERS
 ------------------------------------------- */
-function showBalloons() {
+function showBalloons(correctSoundRef: React.MutableRefObject<HTMLAudioElement | null>) {
     confetti({
         particleCount: 120,
         spread: 80,
@@ -30,9 +30,14 @@ function showBalloons() {
         shapes: ["circle"],
         colors: ["#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#5f27cd"]
     });
-    const audio = new Audio("/sounds/yay.mp3");
-    audio.volume = 0.5;
-    audio.play().catch(() => { });
+
+    const audio = correctSoundRef.current;
+    if (audio) {
+        audio.currentTime = 0;
+        audio.play().catch((err) => {
+            console.log("Audio play failed:", err);
+        });
+    }
 }
 
 export default function QuizUI({
@@ -58,22 +63,81 @@ export default function QuizUI({
     const [fade, setFade] = useState(true);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [loaded, setLoaded] = useState(false);
+    const [audioUnlocked, setAudioUnlocked] = useState(false);
 
     /* -------------------------------------------
-       🔊 WRONG SOUND
+       🔊 AUDIO REFS
     ------------------------------------------- */
     const wrongSoundRef = useRef<HTMLAudioElement | null>(null);
+    const correctSoundRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
+        // Pre-load audio files
         wrongSoundRef.current = new Audio("/sounds/pew_pew.mp3");
         wrongSoundRef.current.volume = 0.7;
-    }, []);
+        wrongSoundRef.current.load();
+
+        correctSoundRef.current = new Audio("/sounds/yay.mp3");
+        correctSoundRef.current.volume = 0.5;
+        correctSoundRef.current.load();
+
+        // Only unlock audio for Safari/iOS (other browsers don't need it)
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+        if (!isSafari) {
+            setAudioUnlocked(true);
+            return;
+        }
+
+        // Unlock audio on first user interaction (for Safari) - SILENTLY
+        const unlockAudio = () => {
+            if (!audioUnlocked) {
+                // Temporarily mute, play, then restore volume
+                const wrongVol = wrongSoundRef.current?.volume || 0;
+                const correctVol = correctSoundRef.current?.volume || 0;
+
+                if (wrongSoundRef.current) wrongSoundRef.current.volume = 0;
+                if (correctSoundRef.current) correctSoundRef.current.volume = 0;
+
+                wrongSoundRef.current?.play().then(() => {
+                    wrongSoundRef.current?.pause();
+                    if (wrongSoundRef.current) {
+                        wrongSoundRef.current.currentTime = 0;
+                        wrongSoundRef.current.volume = wrongVol;
+                    }
+                }).catch(() => { });
+
+                correctSoundRef.current?.play().then(() => {
+                    correctSoundRef.current?.pause();
+                    if (correctSoundRef.current) {
+                        correctSoundRef.current.currentTime = 0;
+                        correctSoundRef.current.volume = correctVol;
+                    }
+                }).catch(() => { });
+
+                setAudioUnlocked(true);
+            }
+        };
+
+        // Add listeners for various user interactions
+        document.addEventListener('click', unlockAudio, { once: true });
+        document.addEventListener('touchstart', unlockAudio, { once: true });
+        document.addEventListener('keydown', unlockAudio, { once: true });
+
+        return () => {
+            document.removeEventListener('click', unlockAudio);
+            document.removeEventListener('touchstart', unlockAudio);
+            document.removeEventListener('keydown', unlockAudio);
+        };
+    }, [audioUnlocked]);
 
     function playWrongSound() {
         const audio = wrongSoundRef.current;
         if (!audio) return;
         audio.currentTime = 0;
-        audio.play().catch(() => { });
+        audio.play().catch((err) => {
+            console.log("Audio play failed:", err);
+        });
     }
 
     /* -------------------------------------------
@@ -117,7 +181,7 @@ export default function QuizUI({
 
         const correct = isAnswerCorrect(userAnswer, expected);
 
-        correct ? showBalloons() : playWrongSound();
+        correct ? showBalloons(correctSoundRef) : playWrongSound();
 
         setSubmittedQuestions((prev) => [...prev, { q, userAnswer, correct }]);
 

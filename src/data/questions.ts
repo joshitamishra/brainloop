@@ -133,7 +133,7 @@ export const QUESTION_BANK = {
                     { q: "Which function rounds numbers?", a: "ROUND" },
 
                     { q: "Which function sums by condition?", a: "SUMIF" }
-              ],
+                ],
             },
         }
     },
@@ -195,70 +195,81 @@ export const QUESTION_BANK = {
             }
         },
     },
-        primary: {
-            label: "PRIMARY BLOCK",
-            ageGroups: {
-                "4-6": {
-                    label: "4–6 Years",
-                    topics: {
-                        basic_math: {
-                            label: "Math",
-                            route: "/primary/4-6/basic-math",
-                            type: "quiz"
-                        },
-                        english: {
-                            label: "English",
-                            route: "/primary/4-6/english",
-                            type: "quiz"
-                        },
-                        science: {
-                            label: "Science",
-                            route: "/primary/4-6/science",
-                            type: "quiz"
-                        },
-                        reading: {
-                            label: "Reading Comprehension",
-                            route: "/primary/4-6/reading",
-                            type: "quiz"
-                        },
-                        shlok: {
-                            label: "Shlok",
-                            route: "/primary/4-6/shlok",
-                            type: "content"
-                        }
-                    }
-                },
-
-                "6-8": {
-                    label: "6–8 Years",
-                    topics: {
-                        basic_math: {
-                            label: "Basic Math",
-                            route: "/primary/6-8/basic-math",
-                            type: "quiz"
-                        },
-                        english: {
-                            label: "English",
-                            route: "/primary/6-8/english",
-                            type: "quiz"
-                        },
-                        science: {
-                            label: "Science",
-                            route: "/primary/6-8/science",
-                            type: "quiz"
-                        },
-                        reading: {
-                            label: "Reading Comprehension",
-                            route: "/primary/6-8/reading",
-                            type: "quiz"
-                        },
-                        shlok: {
-                            label: "Shlok",
-                            route: "/primary/6-8/shlok",
-                            type: "content"
-                        }
+    primary: {
+        label: "PRIMARY BLOCK",
+        ageGroups: {
+            "2-3": {
+                label: "2–3 Years",
+                topics: {
+                    colors_and_shapes: {
+                        label: "Colors & Shapes",
+                        route: "/primary/2-3/colors_and_shapes",
+                        type: "slideshow"
                     }
                 }
+            },
+
+            "4-6": {
+                label: "4–6 Years",
+                topics: {
+                    basic_math: {
+                        label: "Math",
+                        route: "/primary/4-6/basic_math",
+                        type: "quiz"
+                    },
+                    english: {
+                        label: "English",
+                        route: "/primary/4-6/english",
+                        type: "quiz"
+                    },
+                    science: {
+                        label: "Science",
+                        route: "/primary/4-6/science",
+                        type: "quiz"
+                    },
+                    reading: {
+                        label: "Reading Comprehension",
+                        route: "/primary/4-6/reading_comprehension",
+                        type: "quiz"
+                    },
+                    shlok: {
+                        label: "Shlok",
+                        route: "/primary/shlok",
+                        type: "content"
+                    }
+                }
+            },
+
+            "6-8": {
+                label: "6–8 Years",
+                topics: {
+                    basic_math: {
+                        label: "Basic Math",
+                        route: "/primary/6-8/basic_math",
+                        type: "quiz"
+                    },
+                    english: {
+                        label: "English",
+                        route: "/primary/6-8/english",
+                        type: "quiz"
+                    },
+                    science: {
+                        label: "Science",
+                        route: "/primary/6-8/science",
+                        type: "quiz"
+                    },
+                    reading: {
+                        label: "Reading Comprehension",
+                        route: "/primary/6-8/reading",
+                        type: "quiz"
+                    },
+                    shlok: {
+                        label: "Shlok",
+                        route: "/primary/shlok",
+                        type: "content"
+                    }
+                }
+            }
         }
     },
 } as const;

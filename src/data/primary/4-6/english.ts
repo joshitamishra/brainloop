@@ -1,130 +1,83 @@
 export const questions = [
     {
-        q: "Which one is a DOG?",
+        q: "Red planet?",
         options: [
-            { id: "dog", label: "🐶 Dog" },
-            { id: "cat", label: "🐱 Cat" }
+            { id: "mars", label: "🔴 Mars" },
+            { id: "earth", label: "🌍 Earth" },
+            { id: "sun", label: "☀️ Sun" }
         ],
-        a: "dog"
+        a: "mars"
     },
     {
-        q: "Which one is a CAT?",
+        q: "Blue planet?",
         options: [
-            { id: "cat", label: "🐱 Cat" },
-            { id: "cow", label: "🐮 Cow" }
+            { id: "earth", label: "🌍 Earth" },
+            { id: "moon", label: "🌙 Moon" },
+            { id: "sun", label: "☀️ Sun" }
         ],
-        a: "cat"
+        a: "earth"
     },
     {
-        q: "Which animal can FLY?",
-        options: [
-            { id: "bird", label: "🐦 Bird" },
-            { id: "dog", label: "🐶 Dog" }
-        ],
-        a: "bird"
-    },
-    {
-        q: "Which one lives in WATER?",
-        options: [
-            { id: "fish", label: "🐟 Fish" },
-            { id: "lion", label: "🦁 Lion" }
-        ],
-        a: "fish"
-    },
-    {
-        q: "Which animal says MOO?",
-        options: [
-            { id: "cow", label: "🐮 Cow" },
-            { id: "dog", label: "🐶 Dog" }
-        ],
-        a: "cow"
-    },
-
-    // 🍎 FOOD
-    {
-        q: "Which one is a FRUIT?",
-        options: [
-            { id: "apple", label: "🍎 Apple" },
-            { id: "ball", label: "⚽ Ball" }
-        ],
-        a: "apple"
-    },
-    {
-        q: "Which one can you EAT?",
-        options: [
-            { id: "banana", label: "🍌 Banana" },
-            { id: "car", label: "🚗 Car" }
-        ],
-        a: "banana"
-    },
-    {
-        q: "Which one is SWEET?",
-        options: [
-            { id: "icecream", label: "🍦 Ice Cream" },
-            { id: "salt", label: "🧂 Salt" }
-        ],
-        a: "icecream"
-    },
-
-    // 🎨 COLORS
-    {
-        q: "Which one is RED?",
-        options: [
-            { id: "apple", label: "🍎 Apple" },
-            { id: "leaf", label: "🍃 Leaf" }
-        ],
-        a: "apple"
-    },
-    {
-        q: "Which one is YELLOW?",
-        options: [
-            { id: "banana", label: "🍌 Banana" },
-            { id: "grapes", label: "🍇 Grapes" }
-        ],
-        a: "banana"
-    },
-
-    // 🏠 DAILY LIFE
-    {
-        q: "Where do we SLEEP?",
-        options: [
-            { id: "bed", label: "🛏️ Bed" },
-            { id: "road", label: "🛣️ Road" }
-        ],
-        a: "bed"
-    },
-    {
-        q: "What do we use to SEE?",
-        options: [
-            { id: "eyes", label: "👀 Eyes" },
-            { id: "ears", label: "👂 Ears" }
-        ],
-        a: "eyes"
-    },
-    {
-        q: "What do we wear on our FEET?",
-        options: [
-            { id: "shoes", label: "👟 Shoes" },
-            { id: "hat", label: "🎩 Hat" }
-        ],
-        a: "shoes"
-    },
-
-    // ☀️ NATURE
-    {
-        q: "What gives us LIGHT in the day?",
+        q: "Yellow star?",
         options: [
             { id: "sun", label: "☀️ Sun" },
+            { id: "earth", label: "🌍 Earth" },
             { id: "moon", label: "🌙 Moon" }
         ],
         a: "sun"
     },
     {
-        q: "Which one is BIG?",
+        q: "Ring planet?",
         options: [
-            { id: "elephant", label: "🐘 Elephant" },
-            { id: "ant", label: "🐜 Ant" }
+            { id: "earth", label: "🌍 Earth" },
+            { id: "moon", label: "🌙 Moon" },
+            { id: "saturn", label: "🪐 Saturn" }
         ],
-        a: "elephant"
+        a: "saturn"
+    },
+    {
+        q: "Big planet?",
+        options: [
+            { id: "mercury", label: "⚪ Mercury" },
+            { id: "jupiter", label: "🟠 Jupiter" },
+            { id: "earth", label: "🌍 Earth" }
+        ],
+        a: "jupiter"
+    },
+    {
+        q: "Small planet?",
+        options: [
+            { id: "jupiter", label: "🟠 Jupiter" },
+            { id: "mercury", label: "⚪ Mercury" },
+            { id: "sun", label: "☀️ Sun" }
+        ],
+        a: "mercury"
+    },
+    {
+        q: "Hot star?",
+        options: [
+            { id: "sun", label: "☀️ Sun" },
+            { id: "moon", label: "🌙 Moon" },
+            { id: "earth", label: "🌍 Earth" }
+        ],
+        a: "sun"
+    },
+    {
+        q: "Home planet?",
+        options: [
+            { id: "mars", label: "🔴 Mars" },
+            { id: "moon", label: "🌙 Moon" },
+            { id: "earth", label: "🌍 Earth" }
+        ],
+        a: "earth"
+    },
+    {
+        q: "Red world?",
+        options: [
+            { id: "mars", label: "🔴 Mars" },
+            { id: "jupiter", label: "🟠 Jupiter" },
+            { id: "moon", label: "🌙 Moon" }
+        ],
+        a: "mars"
     }
 ];

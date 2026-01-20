@@ -41,6 +41,17 @@ export const QUESTION_BANK = {
         label: "PRIMARY BLOCK",
 
         ageGroups: {
+            "2-3": {
+                label: "2–3 Years",
+                topics: {
+                    colors_and_shapes: {
+                        label: "Colors & Shapes",
+                        kind: "slideshow",
+                        route: "/primary/2-3/colors_and_shapes"
+                    }
+                }
+            },
+
             "4-6": {
                 label: "4–6 Years",
                 topics: {

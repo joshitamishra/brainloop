@@ -42,7 +42,7 @@ export default function Sidebar() {
                                             <SidebarTopicLink
                                                 key={topicKey}
                                                 href={
-                                                    topic.type === "content"
+                                                    "route" in topic && topic.route
                                                         ? topic.route
                                                         : `/quiz/start?category=primary&age=${ageKey}&topic=${topicKey}`
                                                 }

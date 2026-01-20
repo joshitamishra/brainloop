@@ -22,7 +22,7 @@ export function isAnswerCorrect(user: string, correct: string): boolean {
 
   // 🎯 1. If both answers contain numbers → numeric comparison
   if (userNum !== null && correctNum !== null) {
-    const tolerance = 1; // You can change to ±1 or ±5
+    const tolerance = 0; // Exact match required for numeric answers
     const diff = Math.abs(userNum - correctNum);
     return diff <= tolerance;
   }
