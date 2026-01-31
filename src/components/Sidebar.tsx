@@ -13,7 +13,7 @@ export default function Sidebar() {
             {Object.entries(QUESTION_BANK).map(([categoryKey, category]) => {
                 // PRIMARY BLOCK (uses ageGroups)
                 if (categoryKey === "primary") {
-                    if (!category.ageGroups) return null;
+                    if (!('ageGroups' in category) || !category.ageGroups) return null;
 
                     return (
                         <div key={categoryKey} className="mb-8">
@@ -48,7 +48,7 @@ export default function Sidebar() {
                 }
 
                 // NON-PRIMARY categories (old structure)
-                if (!category.topics) return null;
+                if (!('topics' in category) || !category.topics) return null;
 
                 const isLocked = ["math", "physics", "chemistry"].includes(categoryKey);
 

@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -56,6 +58,12 @@ export default function QuizStartPage() {
             /* ================================
                1️⃣ TRY STATIC QUESTIONS FIRST
             ================================= */
+            if (!category || !topicKey) {
+                setError("Category and topic are required");
+                setLoading(false);
+                return;
+            }
+
             const staticQuestions = await loadStaticQuestions({
                 category,
                 topic: topicKey,
@@ -71,7 +79,7 @@ export default function QuizStartPage() {
                2️⃣ FALLBACK → AI
             ================================= */
             const cached = await loadAIQuestions(topicKey);
-            if (cached && cached.length > 0) {
+            if (cached && Array.isArray(cached) && cached.length > 0) {
                 beginSession(cached);
                 return;
             }

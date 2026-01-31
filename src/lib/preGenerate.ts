@@ -5,6 +5,11 @@ export async function preGenerateAllTopics(currentTopic: string) {
     const tasks: { category: string; topic: string }[] = [];
 
     for (const [catKey, catVal] of Object.entries(QUESTION_BANK)) {
+        // Skip primary category as it uses ageGroups, not topics
+        if (catKey === "primary" || !('topics' in catVal) || !catVal.topics) {
+            continue;
+        }
+
         for (const topicKey of Object.keys(catVal.topics)) {
             if (topicKey !== currentTopic) {
                 tasks.push({ category: catKey, topic: topicKey });

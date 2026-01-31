@@ -28,15 +28,13 @@ export default function ShlokaPage() {
                     key={s.id}
                     className="p-6 rounded-xl bg-[#161618] border border-[#2d2d30]"
                 >
-                    <h2 className="text-xl font-semibold mb-4">{s.title}</h2>
+
 
                     <p className="text-lg leading-relaxed mb-4">
                         {s.text}
                     </p>
 
-                    <p className="text-sm text-gray-400 mb-4">
-                        {s.meaning}
-                    </p>
+
 
                     <audio
                         controls
@@ -44,7 +42,7 @@ export default function ShlokaPage() {
                         onPlay={(e) =>
                             handlePlay(e.currentTarget as HTMLAudioElement)
                         }
-                        onEnded={() => {
+                        onEnded={(e) => {
                             if (currentlyPlayingRef.current === e.currentTarget) {
                                 currentlyPlayingRef.current = null;
                             }

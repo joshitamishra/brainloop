@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import QuizUI from "@/components/QuizUI";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
